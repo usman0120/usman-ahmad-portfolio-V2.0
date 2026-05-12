@@ -22,7 +22,11 @@ import {
   FaSass, FaMicrochip, FaKey, FaUserSecret, FaUserLock,
   FaFire, FaShieldVirus, FaCreditCard, FaShoppingCart,
   FaWindows, FaApple, FaLinux, FaAndroid, FaClock,
-  FaHeart, FaSmile, FaBalanceScale, FaRocket
+  FaHeart, FaSmile, FaBalanceScale, FaRocket,
+  FaStackOverflow, FaTerminal, FaSyncAlt, FaMobileAlt,
+  FaServer, FaUserFriends, FaEllipsisH, FaProjectDiagram,
+  FaCheckCircle, FaChartBar,
+  FaTools
 } from 'react-icons/fa';
 
 import { 
@@ -51,6 +55,39 @@ import {
 import { VscVscode } from 'react-icons/vsc';
 import { DiDebian, DiRedhat, DiLess, DiDart, DiIllustrator, DiMaterializecss, DiPhotoshop, DiSymfony, DiLaravel } from 'react-icons/di';
 
+// Category Icon Mapping - maps icon name strings to React components
+const CATEGORY_ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  'FaStackOverflow': FaStackOverflow,
+  'FaCode': FaCode,
+  'FaShieldAlt': FaShieldAlt,
+  'FaNetworkWired': FaNetworkWired,
+  'FaGlobe': FaGlobe,
+  'FaMobileAlt': FaMobileAlt,
+  'FaServer': FaServer,
+  'FaPaintBrush': FaPaintBrush,
+  'FaDatabase': FaDatabase,
+  'FaSyncAlt': FaSyncAlt,
+  'FaCloud': FaCloud,
+  'FaRobot': FaRobot,
+  'FaChartBar': FaChartBar,
+  'FaTerminal': FaTerminal,
+  'FaTools': FaTools,
+  'FaCheckCircle': FaCheckCircle,
+  'FaProjectDiagram': FaProjectDiagram,
+  'FaLightbulb': FaLightbulb,
+  'FaUserFriends': FaUserFriends,
+  'FaEllipsisH': FaEllipsisH,
+};
+
+// Helper to render category icon from string name
+const renderCategoryIcon = (iconName: string, className: string = '') => {
+  const IconComponent = CATEGORY_ICON_MAP[iconName];
+  if (IconComponent) {
+    return <IconComponent className={className} />;
+  }
+  // Fallback
+  return <FaCode className={className} />;
+};
 // Extended Icon Options - All using React Icons only
 const EXTENDED_ICON_OPTIONS: Array<{ value: string; icon: React.ComponentType<{ className?: string }>; label: string }> = [
   // === PROGRAMMING LANGUAGES ===
@@ -291,6 +328,17 @@ const EXTENDED_ICON_OPTIONS: Array<{ value: string; icon: React.ComponentType<{ 
   { value: 'FaHeart', icon: FaHeart, label: 'Empathy' },
   { value: 'FaSmile', icon: FaSmile, label: 'Positive Attitude' },
   { value: 'FaBalanceScale', icon: FaBalanceScale, label: 'Decision Making' },
+
+{ value: 'FaStackOverflow', icon: FaStackOverflow, label: 'Full Stack' },
+{ value: 'FaTerminal', icon: FaTerminal, label: 'Terminal/CLI' },
+{ value: 'FaSyncAlt', icon: FaSyncAlt, label: 'CI/CD' },
+{ value: 'FaMobileAlt', icon: FaMobileAlt, label: 'Mobile Dev' },
+{ value: 'FaServer', icon: FaServer, label: 'Server/Backend' },
+{ value: 'FaUserFriends', icon: FaUserFriends, label: 'User Centered' },
+{ value: 'FaEllipsisH', icon: FaEllipsisH, label: 'Other' },
+{ value: 'FaProjectDiagram', icon: FaProjectDiagram, label: 'Architecture' },
+{ value: 'FaCheckCircle', icon: FaCheckCircle, label: 'Testing/QA' },
+{ value: 'FaChartBar', icon: FaChartBar, label: 'Data/Analytics' },
 ];
 
 // Button Component
@@ -645,8 +693,10 @@ const SkillsAdmin: React.FC = () => {
                 {categoriesWithSkills.map((cat) => (
                   <Card key={cat.value} padding="sm" className="text-center">
                     <div className={`text-xl font-bold bg-gradient-to-r ${cat.color} bg-clip-text text-transparent`}>{skillsByCategory[cat.value]?.length || 0}</div>
-                    <div className="text-xs text-gray-500 flex items-center justify-center gap-1"><span>{cat.icon}</span><span>{cat.label}</span></div>
-                  </Card>
+<div className="text-xs text-gray-500 flex items-center justify-center gap-1">
+  <span>{renderCategoryIcon(cat.icon, 'text-sm')}</span>
+  <span>{cat.label}</span>
+</div>                  </Card>
                 ))}
               </div>
             )}
@@ -719,8 +769,11 @@ const SkillsAdmin: React.FC = () => {
             <label className="text-sm font-medium mb-2 block">Category</label>
             <select name="category" value={formData.category} onChange={handleInputChange}
               className="w-full px-4 py-2.5 border rounded-xl dark:bg-gray-800 focus:ring-2 focus:ring-primary/50">
-              {SKILL_CATEGORIES.map(opt => <option key={opt.value} value={opt.value}>{opt.icon} {opt.label}</option>)}
-            </select>
+{SKILL_CATEGORIES.map(opt => (
+  <option key={opt.value} value={opt.value}>
+    {opt.label}
+  </option>
+))}            </select>
           </div>
 
           <IconPicker selectedIcon={formData.icon} onSelect={(icon) => setFormData(prev => ({ ...prev, icon }))} error={errors.icon} />

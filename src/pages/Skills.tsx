@@ -5,7 +5,7 @@ import { useSkills } from '../hooks/useFirestore';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import { fadeUp, staggerContainer } from '../utils/animations';
 import { SKILL_CATEGORIES, type Skill } from '../firebase/models';
-import { FaArrowRight, FaRocket, FaStar, FaCode, FaSass, FaKey, FaUserSecret, FaUserLock, FaFire, FaShieldVirus, FaClock, FaHeart, FaSmile, FaBalanceScale, FaMicrochip, FaShoppingCart, FaCreditCard, FaMicrosoft } from 'react-icons/fa';
+import { FaArrowRight, FaRocket, FaStar, FaCode, FaSass, FaKey, FaUserSecret, FaUserLock, FaFire, FaShieldVirus, FaClock, FaHeart, FaSmile, FaBalanceScale, FaMicrochip, FaShoppingCart, FaCreditCard, FaMicrosoft, FaWhatsapp, FaDiscord } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 // Import all possible icons that could be used in skills
@@ -17,7 +17,12 @@ import { FaBrain,
   FaAngular, FaVuejs, FaPhp, FaSwift, FaAndroid, FaApple,
   FaLinux, FaWindows, FaGithub, FaGitlab,
   FaFigma, FaTrophy, FaGraduationCap,
-  FaLightbulb, FaUsers, FaComments, FaHandshake
+  FaLightbulb, FaUsers, FaComments, FaHandshake,
+  FaStackOverflow, FaTerminal, FaSyncAlt, FaMobileAlt,
+  FaServer, FaUserFriends, FaEllipsisH, FaProjectDiagram,
+  FaCheckCircle, FaChartBar, FaHeadset, FaDribbble, FaMedium, FaDev,
+  FaTelegram, FaSkype, FaSlack, FaBehance, FaEnvelope, FaLinkedin,
+  FaTwitter, FaFacebook, FaInstagram, FaYoutube, FaTwitch
 } from 'react-icons/fa';
 import { 
   SiTypescript, SiKubernetes, SiTerraform, SiJenkins, SiGrafana,
@@ -40,12 +45,27 @@ import {
   SiReactrouter, SiReacthookform, SiExpo, SiElectron, SiTauri, SiArduino,
   SiRaspberrypi, SiEspressif, SiGooglecloud, SiWebflow, SiWordpress,
   SiContentful, SiSanity, SiStrapi, SiGhost, SiOpenai, SiHuggingface,
-  SiLangchain, SiGithubactions
+  SiLangchain, SiGithubactions,
+  SiFiverr,
+  SiUpwork,
+  SiFreelancer,
+  SiToptal
 } from 'react-icons/si';
 import { VscVscode, VscTerminal, VscFolder, VscFile, VscSearch, VscSettings } from 'react-icons/vsc';
 
 // Icon mapping
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  'FaStackOverflow': FaStackOverflow,
+  'FaTerminal': FaTerminal,
+  'FaSyncAlt': FaSyncAlt,
+  'FaMobileAlt': FaMobileAlt,
+  'FaServer': FaServer,
+  'FaUserFriends': FaUserFriends,
+  'FaEllipsisH': FaEllipsisH,
+  'FaProjectDiagram': FaProjectDiagram,
+  'FaCheckCircle': FaCheckCircle,
+  'FaChartBar': FaChartBar,
+  'FaLaptopCode': FaCode, 
   'FaCode': FaCode, 'FaPython': FaPython, 'FaJava': FaJava, 'FaPhp': FaPhp,
   'FaSwift': FaSwift, 'FaReact': FaReact, 'FaVuejs': FaVuejs, 'FaAngular': FaAngular,
   'FaNodeJs': FaNodeJs, 'FaHtml5': FaHtml5, 'FaCss3Alt': FaCss3Alt, 'FaSass': FaSass,
@@ -96,17 +116,46 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   'SiVault': SiVault, 'SiUbuntu': SiUbuntu, 'SiArduino': SiArduino, 'SiRaspberrypi': SiRaspberrypi,
   'SiEspressif': SiEspressif, 'VscVscode': VscVscode, 'VscTerminal': VscTerminal,
   'VscFolder': VscFolder, 'VscFile': VscFile, 'VscSearch': VscSearch, 'VscSettings': VscSettings,
+  // Social Icons (add these)
+  'FaLinkedin': FaLinkedin,
+  'FaTwitter': FaTwitter,
+  'FaFacebook': FaFacebook,
+  'FaInstagram': FaInstagram,
+  'FaYoutube': FaYoutube,
+  'FaTwitch': FaTwitch,
+  'FaDiscord': FaDiscord,
+  'FaWhatsapp': FaWhatsapp,
+  'FaTelegram': FaTelegram,
+  'FaEnvelope': FaEnvelope,
+  'FaBehance': FaBehance,
+  'FaDribbble': FaDribbble,
+  'FaMedium': FaMedium,
+  'FaDev': FaDev,
+  'FaSkype': FaSkype,
+  'FaFiverr': SiFiverr,
+  'FaUpwork': SiUpwork,
+  'FaFreelancer': SiFreelancer,
+  'FaToptal': SiToptal,
+  'FaSlack': FaSlack,
+  'FaHeadset': FaHeadset,
 };
 
 const renderIcon = (iconName: string, className: string = '') => {
   const IconComponent = iconMap[iconName];
   if (IconComponent) return <IconComponent className={className} />;
+  // If icon name is a short emoji/string (2-3 chars), render it as text
   if (iconName && iconName.length <= 3) return <span className={className}>{iconName}</span>;
+  // Fallback: try to render as text if it doesn't start with Fa/Si/Vsc
+  if (iconName && !iconName.startsWith('Fa') && !iconName.startsWith('Si') && !iconName.startsWith('Vsc')) {
+    return <span className={className}>{iconName}</span>;
+  }
   return <FaCode className={className} />;
 };
 
 const getCategoryStyle = (category: string) => {
   const styles: Record<string, { bgGradient: string; borderColor: string; iconBg: string; accentColor: string }> = {
+    full_stack: { bgGradient: 'from-indigo-500/10 to-purple-600/10', borderColor: 'border-indigo-500/30', iconBg: 'bg-indigo-100 dark:bg-indigo-900/20', accentColor: 'text-indigo-600 dark:text-indigo-400' },
+    software_dev: { bgGradient: 'from-blue-500/10 to-cyan-500/10', borderColor: 'border-blue-500/30', iconBg: 'bg-blue-100 dark:bg-blue-900/20', accentColor: 'text-blue-600 dark:text-blue-400' },
     security: { bgGradient: 'from-red-500/10 to-orange-500/10', borderColor: 'border-red-500/30', iconBg: 'bg-red-100 dark:bg-red-900/20', accentColor: 'text-red-600 dark:text-red-400' },
     network: { bgGradient: 'from-green-500/10 to-emerald-500/10', borderColor: 'border-green-500/30', iconBg: 'bg-green-100 dark:bg-green-900/20', accentColor: 'text-green-600 dark:text-green-400' },
     web: { bgGradient: 'from-blue-500/10 to-cyan-500/10', borderColor: 'border-blue-500/30', iconBg: 'bg-blue-100 dark:bg-blue-900/20', accentColor: 'text-blue-600 dark:text-blue-400' },
@@ -117,8 +166,12 @@ const getCategoryStyle = (category: string) => {
     devops: { bgGradient: 'from-cyan-500/10 to-teal-500/10', borderColor: 'border-cyan-500/30', iconBg: 'bg-cyan-100 dark:bg-cyan-900/20', accentColor: 'text-cyan-600 dark:text-cyan-400' },
     cloud: { bgGradient: 'from-sky-500/10 to-indigo-500/10', borderColor: 'border-sky-500/30', iconBg: 'bg-sky-100 dark:bg-sky-900/20', accentColor: 'text-sky-600 dark:text-sky-400' },
     ai_ml: { bgGradient: 'from-violet-500/10 to-purple-500/10', borderColor: 'border-violet-500/30', iconBg: 'bg-violet-100 dark:bg-violet-900/20', accentColor: 'text-violet-600 dark:text-violet-400' },
+    data_science: { bgGradient: 'from-emerald-500/10 to-teal-500/10', borderColor: 'border-emerald-500/30', iconBg: 'bg-emerald-100 dark:bg-emerald-900/20', accentColor: 'text-emerald-600 dark:text-emerald-400' },
     programming: { bgGradient: 'from-yellow-500/10 to-amber-500/10', borderColor: 'border-yellow-500/30', iconBg: 'bg-yellow-100 dark:bg-yellow-900/20', accentColor: 'text-yellow-600 dark:text-yellow-400' },
     tools: { bgGradient: 'from-gray-500/10 to-slate-500/10', borderColor: 'border-gray-500/30', iconBg: 'bg-gray-100 dark:bg-gray-900/20', accentColor: 'text-gray-600 dark:text-gray-400' },
+    testing: { bgGradient: 'from-green-500/10 to-emerald-500/10', borderColor: 'border-green-500/30', iconBg: 'bg-green-100 dark:bg-green-900/20', accentColor: 'text-green-600 dark:text-green-400' },
+    architecture: { bgGradient: 'from-purple-500/10 to-indigo-500/10', borderColor: 'border-purple-500/30', iconBg: 'bg-purple-100 dark:bg-purple-900/20', accentColor: 'text-purple-600 dark:text-purple-400' },
+    concepts: { bgGradient: 'from-amber-500/10 to-yellow-500/10', borderColor: 'border-amber-500/30', iconBg: 'bg-amber-100 dark:bg-amber-900/20', accentColor: 'text-amber-600 dark:text-amber-400' },
     soft: { bgGradient: 'from-pink-500/10 to-rose-500/10', borderColor: 'border-pink-500/30', iconBg: 'bg-pink-100 dark:bg-pink-900/20', accentColor: 'text-pink-600 dark:text-pink-400' },
     other: { bgGradient: 'from-slate-500/10 to-gray-500/10', borderColor: 'border-slate-500/30', iconBg: 'bg-slate-100 dark:bg-slate-900/20', accentColor: 'text-slate-600 dark:text-slate-400' }
   };
@@ -380,8 +433,14 @@ const CategoryHeader: React.FC<{ category: typeof SKILL_CATEGORIES[0]; skillCoun
     >
       <div className="flex items-center gap-3">
         <div className={`w-10 h-10 bg-gradient-to-br ${category.color} rounded-xl flex items-center justify-center text-xl shadow-md`}>
-          <span className="text-white">{category.icon}</span>
-        </div>
+  {(() => {
+    const CatIconComponent = iconMap[category.icon];
+    if (CatIconComponent) {
+      return <CatIconComponent className="text-white text-lg" />;
+    }
+    return <span className="text-white">{category.icon}</span>;
+  })()}
+</div>
         <div>
           <h3 className="text-xl font-bold text-gray-900 dark:text-white">
             {category.label}
@@ -391,6 +450,83 @@ const CategoryHeader: React.FC<{ category: typeof SKILL_CATEGORIES[0]; skillCoun
           </p>
         </div>
         <div className="flex-1 h-px bg-gradient-to-r from-primary/30 to-transparent ml-4" />
+      </div>
+    </motion.div>
+  );
+};
+
+// ==================== Featured Skills Section ====================
+const FeaturedSkillsSection: React.FC<{ skills: Skill[] }> = ({ skills }) => {
+  const featuredSkills = skills.filter(s => s.featured).slice(0, 8);
+  
+  if (featuredSkills.length === 0) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="mb-16"
+    >
+      <div className="text-center mb-8">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500/10 border border-yellow-500/30 rounded-full mb-4">
+          <FaStar className="text-yellow-500 text-sm" />
+          <span className="text-yellow-600 dark:text-yellow-400 text-sm font-semibold">Featured Expertise</span>
+        </div>
+        <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Core Competencies
+        </h3>
+      </div>
+      
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        {featuredSkills.map((skill, index) => {
+          const categoryStyle = getCategoryStyle(skill.category);
+          const proficiencyPercent = (skill.proficiency / 5) * 100;
+          return (
+            <motion.div
+              key={skill.id}
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.08, type: "spring" }}
+              whileHover={{ y: -5 }}
+              className={`relative overflow-hidden rounded-2xl border ${categoryStyle.borderColor} bg-white dark:bg-gray-800 shadow-md hover:shadow-xl transition-all duration-300`}
+            >
+              {/* Top accent bar */}
+              <div className={`h-1 bg-gradient-to-r ${getProficiencyBarColor(skill.proficiency)}`} />
+              
+              <div className="p-5">
+                {/* Icon */}
+                <div className={`w-14 h-14 mx-auto mb-4 rounded-xl ${categoryStyle.iconBg} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                  {renderIcon(skill.icon, `text-2xl ${categoryStyle.accentColor}`)}
+                </div>
+                
+                {/* Name */}
+                <h4 className="font-bold text-gray-800 dark:text-white text-center mb-3">
+                  {skill.name}
+                </h4>
+                
+                {/* Proficiency Badge */}
+                <div className="flex justify-center mb-3">
+                  <span className={`text-xs font-semibold px-3 py-1 rounded-full ${categoryStyle.iconBg} ${categoryStyle.accentColor}`}>
+                    {skill.proficiency >= 5 ? 'Expert' : skill.proficiency >= 4 ? 'Advanced' : skill.proficiency >= 3 ? 'Intermediate' : 'Basic'}
+                  </span>
+                </div>
+                
+                {/* Mini Progress Bar */}
+                <div className="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                  <motion.div
+                    className={`h-full rounded-full bg-gradient-to-r ${getProficiencyBarColor(skill.proficiency)}`}
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${proficiencyPercent}%` }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                  />
+                </div>
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
     </motion.div>
   );
@@ -488,6 +624,9 @@ const Skills: React.FC = () => {
           </p>
         </motion.div>
 
+        {/* Featured Skills Section */}
+<FeaturedSkillsSection skills={displaySkills} />
+
         {/* Main Skills Grid by Category - Compact Clean Design */}
         {displaySkills.length > 0 ? (
           <motion.div
@@ -549,7 +688,15 @@ const Skills: React.FC = () => {
                       whileHover={{ scale: 1.05 }}
                       className="text-center"
                     >
-                      <div className="text-2xl">{category.icon}</div>
+                      <div className="text-2xl">
+  {(() => {
+    const StatIconComponent = iconMap[category.icon];
+    if (StatIconComponent) {
+      return <StatIconComponent className="mx-auto text-gray-600 dark:text-gray-400" />;
+    }
+    return <span>{category.icon}</span>;
+  })()}
+</div>
                       <div className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
                         {categorySkills.length}
                       </div>

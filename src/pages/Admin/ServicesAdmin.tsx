@@ -8,7 +8,50 @@ import LoadingSkeleton from '../../components/LoadingSkeleton';
 import { staggerContainer, scale } from '../../utils/animations';
 import { SERVICE_ICON_OPTIONS, FEATURE_ICON_OPTIONS } from '../../firebase/models';
 import type { ServiceFormData, Service, ServiceFeature, ServiceProcess } from '../../firebase/models';
-import { FaPlus, FaTrash, FaEdit, FaArrowUp, FaArrowDown } from 'react-icons/fa';
+import { 
+  FaPlus, FaTrash, FaEdit, FaArrowUp, FaArrowDown, FaCode, FaLaptopCode,
+  FaServer, FaPaintBrush, FaMobileAlt, FaShoppingCart, FaBrain, FaRobot,
+  FaCloud, FaDatabase, FaLock, FaShieldAlt, FaChartLine, FaCogs, FaMicrochip,
+  FaGlobe, FaPalette, FaStackOverflow, FaRocket, FaUsers, FaHeadset, FaSync,
+  FaProjectDiagram, FaCheckCircle, FaGraduationCap
+} from 'react-icons/fa';
+
+// Service icon mapping
+const SERVICE_ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  'FaCode': FaCode,
+  'FaLaptopCode': FaLaptopCode,
+  'FaServer': FaServer,
+  'FaPaintBrush': FaPaintBrush,
+  'FaMobileAlt': FaMobileAlt,
+  'FaShoppingCart': FaShoppingCart,
+  'FaBrain': FaBrain,
+  'FaRobot': FaRobot,
+  'FaCloud': FaCloud,
+  'FaDatabase': FaDatabase,
+  'FaLock': FaLock,
+  'FaShieldAlt': FaShieldAlt,
+  'FaChartLine': FaChartLine,
+  'FaCogs': FaCogs,
+  'FaMicrochip': FaMicrochip,
+  'FaGlobe': FaGlobe,
+  'FaPalette': FaPalette,
+  'FaStackOverflow': FaStackOverflow,
+  'FaRocket': FaRocket,
+  'FaUsers': FaUsers,
+  'FaHeadset': FaHeadset,
+  'FaSync': FaSync,
+  'FaProjectDiagram': FaProjectDiagram,
+  'FaCheckCircle': FaCheckCircle,
+  'FaGraduationCap': FaGraduationCap,
+};
+
+// Helper to render service icon
+const renderServiceIcon = (iconName: string, className: string = '') => {
+  const IconComponent = SERVICE_ICON_MAP[iconName];
+  if (IconComponent) return <IconComponent className={className} />;
+  return <FaCode className={className} />;
+};
+
 
 // Button Component
 interface ButtonProps {
@@ -639,8 +682,8 @@ const openEditModal = (service: Service) => {
                   <div className="p-5 flex-1 flex flex-col">
                     <div className="flex items-start gap-3 mb-3">
                       <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
-                        {service.icon}
-                      </div>
+  {renderServiceIcon(service.icon, 'text-lg')}
+</div>
                       <div className="flex-1">
                         <h3 className="font-semibold text-gray-900 dark:text-white">
                           {service.title}
@@ -809,17 +852,27 @@ const openEditModal = (service: Service) => {
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
               Service Icon
             </label>
-            <select
-              value={formData.icon}
-              onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-              className="w-full px-4 py-2.5 border rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
-            >
-              {SERVICE_ICON_OPTIONS.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
+  {SERVICE_ICON_OPTIONS.map(option => {
+    const IconComponent = SERVICE_ICON_MAP[option.value] || FaCode;
+    return (
+      <button
+        key={option.value}
+        type="button"
+        onClick={() => setFormData({ ...formData, icon: option.value })}
+        className={`p-3 rounded-xl flex flex-col items-center gap-1 transition-all ${
+          formData.icon === option.value
+            ? 'bg-primary text-white shadow-lg'
+            : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-primary/10 border border-gray-200 dark:border-gray-600'
+        }`}
+        title={option.label}
+      >
+        <IconComponent className={`text-xl ${formData.icon === option.value ? 'text-white' : ''}`} />
+        <span className="text-[10px] truncate w-full text-center">{option.label}</span>
+      </button>
+    );
+  })}
+</div>
           </div>
 
           {/* Image Upload */}
