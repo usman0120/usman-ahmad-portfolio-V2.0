@@ -31,8 +31,9 @@ export interface Project {
   updatedAt: Date;
 }
 
-// Skill Categories - Comprehensive for CS, SE, Cyber
 export type SkillCategory = 
+  | 'full_stack'
+  | 'software_dev'
   | 'security' 
   | 'network' 
   | 'web' 
@@ -43,8 +44,11 @@ export type SkillCategory =
   | 'devops' 
   | 'cloud' 
   | 'ai_ml' 
+  | 'data_science'
   | 'programming' 
   | 'tools'
+  | 'testing'
+  | 'architecture'
   | 'concepts'
   | 'soft' 
   | 'other';
@@ -205,42 +209,77 @@ export const COLLECTIONS = {
   PROJECT_DETAILS: 'projectDetails'
 } as const;
 
-// Category configuration
 export const SKILL_CATEGORIES: { value: SkillCategory; label: string; icon: string; color: string; description: string }[] = [
-  { value: 'security', label: 'Cybersecurity', icon: '🛡️', color: 'from-primary to-neon-purple', description: 'Security assessment, penetration testing, and defensive security' },
-  { value: 'network', label: 'Networking', icon: '🌐', color: 'from-cyber-blue to-primary', description: 'Network protocols, architecture, and security' },
-  { value: 'web', label: 'Web Development', icon: '🌍', color: 'from-primary to-cyber-blue', description: 'Web applications, frameworks, and technologies' },
-  { value: 'mobile', label: 'Mobile Development', icon: '📱', color: 'from-neon-purple to-primary', description: 'iOS, Android, and cross-platform mobile development' },
-  { value: 'backend', label: 'Backend Development', icon: '⚙️', color: 'from-cyber-blue to-neon-purple', description: 'Server-side technologies, APIs, and microservices' },
-  { value: 'frontend', label: 'Frontend Development', icon: '🎨', color: 'from-primary to-neon-purple', description: 'UI/UX, frameworks, and client-side technologies' },
-  { value: 'database', label: 'Databases', icon: '🗄️', color: 'from-cyber-blue to-primary', description: 'SQL, NoSQL, and database management systems' },
-  { value: 'devops', label: 'DevOps & CI/CD', icon: '🔄', color: 'from-primary to-cyber-blue', description: 'Automation, deployment, and infrastructure management' },
-  { value: 'cloud', label: 'Cloud Computing', icon: '☁️', color: 'from-neon-purple to-primary', description: 'Cloud platforms, services, and architecture' },
-  { value: 'ai_ml', label: 'AI & Machine Learning', icon: '🤖', color: 'from-cyber-blue to-neon-purple', description: 'Artificial intelligence, ML models, and data science' },
-  { value: 'programming', label: 'Programming Languages', icon: '💻', color: 'from-primary to-cyber-blue', description: 'Programming languages and paradigms' },
-  { value: 'tools', label: 'Tools & Technologies', icon: '🛠️', color: 'from-neon-purple to-primary', description: 'Development tools, IDEs, and utilities' },
-  { value: 'concepts', label: 'Foundations & Core Concepts', icon: '📚', color: 'from-cyber-blue to-neon-purple', description: 'Foundations & Core Concepts, Learning Concepts' },
-  { value: 'soft', label: 'Soft Skills', icon: '🌟', color: 'from-cyber-blue to-neon-purple', description: 'Professional and interpersonal abilities' },
-  { value: 'other', label: 'Other Skills', icon: '📌', color: 'from-gray-500 to-gray-700', description: 'Additional skills and competencies' }
+  { value: 'full_stack', label: 'Full Stack Development', icon: 'FaStackOverflow', color: 'from-indigo-500 to-purple-600', description: 'End-to-end web application development' },
+  { value: 'software_dev', label: 'Software Development', icon: 'FaCode', color: 'from-blue-500 to-cyan-500', description: 'Software engineering principles and practices' },
+  { value: 'security', label: 'Cybersecurity', icon: 'FaShieldAlt', color: 'from-red-500 to-orange-500', description: 'Security assessment, penetration testing, and defensive security' },
+  { value: 'network', label: 'Networking', icon: 'FaNetworkWired', color: 'from-green-500 to-emerald-500', description: 'Network protocols, architecture, and security' },
+  { value: 'web', label: 'Web Development', icon: 'FaGlobe', color: 'from-blue-500 to-cyan-500', description: 'Web applications, frameworks, and technologies' },
+  { value: 'mobile', label: 'Mobile Development', icon: 'FaMobileAlt', color: 'from-purple-500 to-pink-500', description: 'iOS, Android, and cross-platform mobile development' },
+  { value: 'backend', label: 'Backend Development', icon: 'FaServer', color: 'from-indigo-500 to-blue-500', description: 'Server-side technologies, APIs, and microservices' },
+  { value: 'frontend', label: 'Frontend Development', icon: 'FaPaintBrush', color: 'from-sky-500 to-blue-500', description: 'UI/UX, frameworks, and client-side technologies' },
+  { value: 'database', label: 'Databases', icon: 'FaDatabase', color: 'from-orange-500 to-amber-500', description: 'SQL, NoSQL, and database management systems' },
+  { value: 'devops', label: 'DevOps & CI/CD', icon: 'FaSyncAlt', color: 'from-cyan-500 to-teal-500', description: 'Automation, deployment, and infrastructure management' },
+  { value: 'cloud', label: 'Cloud Computing', icon: 'FaCloud', color: 'from-sky-500 to-indigo-500', description: 'Cloud platforms, services, and architecture' },
+  { value: 'ai_ml', label: 'AI & Machine Learning', icon: 'FaRobot', color: 'from-violet-500 to-purple-500', description: 'Artificial intelligence, ML models, and data science' },
+  { value: 'data_science', label: 'Data Science', icon: 'FaChartBar', color: 'from-emerald-500 to-teal-500', description: 'Data analysis, visualization, and statistical modeling' },
+  { value: 'programming', label: 'Programming Languages', icon: 'FaTerminal', color: 'from-yellow-500 to-amber-500', description: 'Programming languages and paradigms' },
+  { value: 'tools', label: 'Tools & Technologies', icon: 'FaTools', color: 'from-gray-500 to-slate-500', description: 'Development tools, IDEs, and utilities' },
+  { value: 'testing', label: 'Testing & QA', icon: 'FaCheckCircle', color: 'from-green-500 to-emerald-500', description: 'Testing frameworks, automation, and quality assurance' },
+  { value: 'architecture', label: 'System Architecture', icon: 'FaProjectDiagram', color: 'from-purple-500 to-indigo-500', description: 'System design, patterns, and architectural concepts' },
+  { value: 'concepts', label: 'Core Concepts', icon: 'FaLightbulb', color: 'from-amber-500 to-yellow-500', description: 'Foundational knowledge and theoretical concepts' },
+  { value: 'soft', label: 'Soft Skills', icon: 'FaUserFriends', color: 'from-pink-500 to-rose-500', description: 'Professional and interpersonal abilities' },
+  { value: 'other', label: 'Other Skills', icon: 'FaEllipsisH', color: 'from-slate-500 to-gray-500', description: 'Additional skills and competencies' }
 ];
-
 // Icon options for skills
 export const SKILL_ICON_OPTIONS = [
-  // Security
-  '🛡️', '🔍', '🔐', '🎯', '🔒', '🔎', '🦈', '🐛', '⚔️', '🏹',
-  // Development
-  '📱', '🎨', '🔄', '🔥', '📡', '💻', '🐍', '⚡', '🗄️', '📚',
-  '🐧', '🐳', '☕', '🦀', '🐘', '🐬', '🍃', '🎭', '⚛️', '📦',
-  // Cloud & DevOps
-  '☁️', '🚀', '📊', '🔧', '⚙️', '🎪', '🏗️', '📈', '🔔', '🎛️',
-  // AI/ML
-  '🤖', '🧠', '👁️', '📊', '🎲', '🔮', '📐', '🎯',
-  // Soft Skills
-  '💡', '🧠', '💬', '👥', '📖', '⭐', '🎯', '🏆', '🤝', '📢',
-  // Other
-  '⚙️', '🔧', '📊', '📁', '📎', '🔗', '📌', '📍'
+  // FA Icons - these will be mapped to React Icons in the admin panel
+  'FaCode', 'FaReact', 'FaNodeJs', 'FaPython', 'FaJava',
+  'SiTypescript', 'FaHtml5', 'FaCss3Alt', 'FaAngular', 'FaVuejs',
+  'SiNextdotjs', 'FaPhp', 'SiFlask', 'SiDjango', 'SiFastapi',
+  'SiSpring', 'SiDotnet', 'FaMobile', 'FaSwift', 'FaAndroid',
+  'FaApple', 'FaBrain', 'FaRobot', 'SiTensorflow', 'SiPytorch',
+  'SiScikitlearn', 'SiPandas', 'SiNumpy', 'SiOpencv',
+  'FaCloud', 'FaAws', 'SiGooglecloud', 'FaDocker', 'SiKubernetes',
+  'SiTerraform', 'SiJenkins', 'SiGrafana', 'SiPrometheus',
+  'FaDatabase', 'SiMongodb', 'SiPostgresql', 'SiMysql', 'SiRedis',
+  'SiElasticsearch', 'SiGraphql', 'SiPrisma', 'SiFirebase', 'SiSupabase',
+  'FaTools', 'FaGitAlt', 'FaGithub', 'FaGitlab', 'VscVscode',
+  'SiTailwindcss', 'SiBootstrap', 'SiSass', 'SiWebpack', 'SiEslint',
+  'SiPrettier', 'SiJest', 'SiCypress', 'SiMocha', 'SiStorybook',
+  'FaFigma', 'SiSketch', 'SiPostman', 'SiSwagger', 'SiNpm',
+  'SiYarn', 'SiVite', 'SiBabel',
+  'FaShieldAlt', 'FaLock', 'FaKey', 'FaUserSecret', 'FaUserLock',
+  'FaBug', 'FaNetworkWired', 'FaFire', 'FaShieldVirus',
+  'FaLinux', 'SiUbuntu', 'FaWindows', 'FaApple',
+  'SiNginx', 'SiApache', 'SiCaddy', 'SiTraefikproxy',
+  'SiRabbitmq', 'SiApachekafka', 'SiRedis',
+  'SiAnsible', 'SiPuppet', 'SiChef', 'SiCircleci', 'SiTravisci',
+  'SiGithubactions', 'SiBitbucket',
+  'SiDatadog', 'SiNewrelic', 'SiSplunk', 'SiKibana', 'SiLogstash',
+  'SiAuth0', 'SiOkta', 'SiKeycloak', 'SiVault',
+  'SiSlack', 'SiDiscord', 'SiZoom', 'SiNotion', 'SiTrello',
+  'SiAsana', 'SiJira', 'SiConfluence',
+  'SiStripe', 'SiPaypal', 'SiShopify', 'SiWoocommerce',
+  'SiWordpress', 'SiContentful', 'SiSanity', 'SiStrapi', 'SiGhost',
+  'SiWebflow', 'SiArduino', 'SiRaspberrypi', 'SiEspressif',
+  'SiOpenai', 'SiHuggingface', 'SiLangchain',
+  'SiJavascript', 'SiCplusplus', 'SiGo', 'SiRust', 'SiRuby',
+  'SiKotlin', 'SiScala', 'SiHaskell', 'SiLua', 'SiPerl', 'SiR',
+  'SiSqlite', 'SiMariadb', 'SiInfluxdb', 'SiNeo4j',
+  'SiExpo', 'SiElectron', 'SiTauri', 'SiRedux', 'SiMobx',
+  'SiRecoil', 'SiAxios', 'SiReactquery', 'SiReactrouter', 'SiReacthookform',
+  'SiRollupdotjs', 'SiEsbuild', 'SiPnpm', 'SiBun',
+  'SiTestinglibrary', 'SiJasmine', 'SiChai', 'SiInvision',
+  'FaSass', 'FaMicrochip', 'FaShoppingCart', 'FaCreditCard',
+  'FaHeart', 'FaSmile', 'FaBalanceScale', 'FaClock', 'FaTrophy',
+  'FaGraduationCap', 'FaGlobe', 'FaChartLine', 'FaRocket',
+  'FaUsers', 'FaComments', 'FaHandshake', 'FaLightbulb',
+  'FaSearch', 'FaMicrosoft', 'FaApple', 'FaAndroid', 'FaLinux',
+  'FaWindows', 'FaDocker', 'FaGithub', 'FaGitlab', 'FaAws',
+  'FaPython', 'FaJava', 'FaNodeJs', 'FaReact', 'FaHtml5',
+  'FaCss3Alt', 'FaAngular', 'FaVuejs', 'FaPhp', 'FaSwift'
 ];
-
 // Updated Font Awesome icon options for social links
 export const SOCIAL_ICON_OPTIONS = [
   { value: 'linkedin', label: 'LinkedIn', prefix: 'fab' },
@@ -303,23 +342,32 @@ export interface ServiceFormData {
   order: number;
 }
 
-// Service icon options
 export const SERVICE_ICON_OPTIONS = [
-  { value: 'FaCode', label: 'Code', category: 'development' },
-  { value: 'FaPaintBrush', label: 'Design', category: 'design' },
-  { value: 'FaMobileAlt', label: 'Mobile', category: 'development' },
+  { value: 'FaCode', label: 'Development', category: 'development' },
+  { value: 'FaLaptopCode', label: 'Software Development', category: 'development' },
+  { value: 'FaServer', label: 'Backend', category: 'development' },
+  { value: 'FaPaintBrush', label: 'UI/UX Design', category: 'design' },
+  { value: 'FaMobileAlt', label: 'Mobile App', category: 'development' },
   { value: 'FaShoppingCart', label: 'E-Commerce', category: 'business' },
   { value: 'FaBrain', label: 'AI/ML', category: 'ai' },
   { value: 'FaRobot', label: 'AI Solutions', category: 'ai' },
-  { value: 'FaCloud', label: 'Cloud', category: 'infrastructure' },
-  { value: 'FaDatabase', label: 'Database', category: 'infrastructure' },
+  { value: 'FaCloud', label: 'Cloud Services', category: 'infrastructure' },
+  { value: 'FaDatabase', label: 'Database Solutions', category: 'infrastructure' },
   { value: 'FaLock', label: 'Security', category: 'security' },
+  { value: 'FaShieldAlt', label: 'Cybersecurity', category: 'security' },
   { value: 'FaChartLine', label: 'Analytics', category: 'business' },
   { value: 'FaCogs', label: 'Automation', category: 'ai' },
   { value: 'FaMicrochip', label: 'IoT', category: 'hardware' },
-  { value: 'FaServer', label: 'Backend', category: 'development' },
-  { value: 'FaGlobe', label: 'Web', category: 'development' },
-  { value: 'FaPalette', label: 'UI/UX', category: 'design' }
+  { value: 'FaGlobe', label: 'Web Development', category: 'development' },
+  { value: 'FaPalette', label: 'Design', category: 'design' },
+  { value: 'FaStackOverflow', label: 'Full Stack', category: 'development' },
+  { value: 'FaRocket', label: 'MVP Development', category: 'development' },
+  { value: 'FaUsers', label: 'Consulting', category: 'business' },
+  { value: 'FaHeadset', label: 'Support', category: 'business' },
+  { value: 'FaSync', label: 'DevOps', category: 'infrastructure' },
+  { value: 'FaProjectDiagram', label: 'Architecture', category: 'development' },
+  { value: 'FaCheckCircle', label: 'QA & Testing', category: 'development' },
+  { value: 'FaGraduationCap', label: 'Training', category: 'business' }
 ];
 
 // Feature icon options
