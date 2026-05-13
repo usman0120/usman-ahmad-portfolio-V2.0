@@ -48,6 +48,7 @@ export type SkillCategory =
   | 'programming' 
   | 'tools'
   | 'testing'
+  | 'design'
   | 'architecture'
   | 'concepts'
   | 'soft' 
@@ -221,6 +222,7 @@ export const SKILL_CATEGORIES: { value: SkillCategory; label: string; icon: stri
   { value: 'database', label: 'Databases', icon: 'FaDatabase', color: 'from-orange-500 to-amber-500', description: 'SQL, NoSQL, and database management systems' },
   { value: 'devops', label: 'DevOps & CI/CD', icon: 'FaSyncAlt', color: 'from-cyan-500 to-teal-500', description: 'Automation, deployment, and infrastructure management' },
   { value: 'cloud', label: 'Cloud Computing', icon: 'FaCloud', color: 'from-sky-500 to-indigo-500', description: 'Cloud platforms, services, and architecture' },
+  { value: 'design', label: 'UI/UX Design', icon: 'FaPaintBrush', color: 'from-sky-500 to-indigo-500', description: 'UI/UX design principles and practices' },
   { value: 'ai_ml', label: 'AI & Machine Learning', icon: 'FaRobot', color: 'from-violet-500 to-purple-500', description: 'Artificial intelligence, ML models, and data science' },
   { value: 'data_science', label: 'Data Science', icon: 'FaChartBar', color: 'from-emerald-500 to-teal-500', description: 'Data analysis, visualization, and statistical modeling' },
   { value: 'programming', label: 'Programming Languages', icon: 'FaTerminal', color: 'from-yellow-500 to-amber-500', description: 'Programming languages and paradigms' },

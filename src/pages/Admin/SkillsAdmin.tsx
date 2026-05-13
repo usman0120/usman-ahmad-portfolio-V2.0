@@ -26,7 +26,9 @@ import {
   FaStackOverflow, FaTerminal, FaSyncAlt, FaMobileAlt,
   FaServer, FaUserFriends, FaEllipsisH, FaProjectDiagram,
   FaCheckCircle, FaChartBar,
-  FaTools
+  FaTools,
+  FaDraftingCompass,
+  FaTasks
 } from 'react-icons/fa';
 
 import { 
@@ -54,7 +56,67 @@ import {
 
 import { VscVscode } from 'react-icons/vsc';
 import { DiDebian, DiRedhat, DiLess, DiDart, DiIllustrator, DiMaterializecss, DiPhotoshop, DiSymfony, DiLaravel } from 'react-icons/di';
-
+// ===== NEW IMPORTS (Fa Icons) =====
+import {
+  FaLaptopCode,
+  FaSitemap,
+  FaClipboardList,
+  FaBookOpen,
+  FaUserGraduate,
+  FaObjectGroup,
+  FaBezierCurve,
+  FaCube,
+  FaCodeBranch,
+  FaMagnifyingGlassChart,
+  FaClipboardCheck,
+  FaTimeline,
+  FaUsersGear,
+  FaPalette,
+  FaPenNib,
+  FaChartPie,
+  FaFileContract,
+  FaDiagramSuccessor,
+  FaDiagramPredecessor,
+  FaShareNodes,
+  FaCalculator,
+  FaAtom,
+  FaFingerprint,
+  FaClipboardQuestion,
+  FaListCheck,
+  FaPencil,
+} from 'react-icons/fa6';
+// ===== NEW IMPORTS (Simple Icons) =====
+import {
+  SiFlutter,
+  SiC,
+  SiSharp,
+  SiWireshark,
+  SiCisco,
+  SiKalilinux,
+  SiCoursera,
+  SiUdemy,
+  SiEdx,
+  SiSololearn,
+  SiCodeforces,
+  SiLeetcode,
+  SiHackerrank,
+  SiGeeksforgeeks,
+  SiCodechef,
+  SiIntellijidea,
+  SiPycharm,
+  SiWebstorm,
+  SiAndroidstudio,
+  SiXcode,
+  SiMarkdown,
+  SiLatex,
+  SiScilab,
+  SiOverleaf,
+  SiMiro,
+  SiClickup,
+  SiClockify,
+  SiTodoist,
+  SiUml,
+} from 'react-icons/si';
 // Category Icon Mapping - maps icon name strings to React components
 const CATEGORY_ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   'FaStackOverflow': FaStackOverflow,
@@ -339,6 +401,102 @@ const EXTENDED_ICON_OPTIONS: Array<{ value: string; icon: React.ComponentType<{ 
 { value: 'FaProjectDiagram', icon: FaProjectDiagram, label: 'Architecture' },
 { value: 'FaCheckCircle', icon: FaCheckCircle, label: 'Testing/QA' },
 { value: 'FaChartBar', icon: FaChartBar, label: 'Data/Analytics' },
+
+
+
+
+// ===== NEW ICON OPTIONS TO APPEND IN EXTENDED_ICON_OPTIONS =====
+
+// === SOFTWARE ENGINEERING COURSES ===
+{ value: 'FaClipboardList', icon: FaClipboardList, label: 'Software Requirements Engineering' },
+{ value: 'FaProjectDiagram', icon: FaProjectDiagram, label: 'System Design' },
+{ value: 'FaDraftingCompass', icon: FaDraftingCompass, label: 'Software Architecture' },
+{ value: 'FaSitemap', icon: FaSitemap, label: 'Data Structures & Algorithms' },
+{ value: 'FaMicrochip', icon: FaMicrochip, label: 'Digital Logic Design' },
+{ value: 'FaNetworkWired', icon: FaNetworkWired, label: 'Computer Networks' },
+{ value: 'FaShieldAlt', icon: FaShieldAlt, label: 'Cyber Security' },
+{ value: 'FaDatabase', icon: FaDatabase, label: 'Database Systems' },
+{ value: 'FaBrain', icon: FaBrain, label: 'Artificial Intelligence' },
+{ value: 'FaRobot', icon: FaRobot, label: 'Machine Learning' },
+{ value: 'FaLaptopCode', icon: FaLaptopCode, label: 'Object Oriented Programming' },
+{ value: 'FaTerminal', icon: FaTerminal, label: 'Operating Systems' },
+{ value: 'FaCodeBranch', icon: FaCodeBranch, label: 'Compiler Construction' },
+{ value: 'FaGlobe', icon: FaGlobe, label: 'Web Engineering' },
+{ value: 'FaMobileAlt', icon: FaMobileAlt, label: 'Mobile App Development' },
+
+// === REQUIREMENT ENGINEERING / DOCUMENTATION ===
+{ value: 'FaFileContract', icon: FaFileContract, label: 'SRS Documentation' },
+{ value: 'FaClipboardCheck', icon: FaClipboardCheck, label: 'Requirement Validation' },
+{ value: 'FaClipboardQuestion', icon: FaClipboardQuestion, label: 'Requirement Elicitation' },
+{ value: 'FaListCheck', icon: FaListCheck, label: 'Requirement Analysis' },
+{ value: 'FaDiagramSuccessor', icon: FaDiagramSuccessor, label: 'Use Case Diagram' },
+{ value: 'FaDiagramPredecessor', icon: FaDiagramPredecessor, label: 'Sequence Diagram' },
+{ value: 'FaTimeline', icon: FaTimeline, label: 'Activity Diagram' },
+{ value: 'FaShareNodes', icon: FaShareNodes, label: 'DFD / Flowcharts' },
+{ value: 'SiPlantuml', icon: SiUml, label: 'PlantUML' },
+{ value: 'SiUml', icon: SiUml, label: 'UML Modeling' },
+
+// === UI/UX / WIREFRAMING ===
+{ value: 'FaPencilRuler', icon: FaPencil, label: 'Wireframing' },
+{ value: 'FaObjectGroup', icon: FaObjectGroup, label: 'Prototyping' },
+{ value: 'FaBezierCurve', icon: FaBezierCurve, label: 'User Flow Design' },
+{ value: 'FaPalette', icon: FaPalette, label: 'Visual Design' },
+{ value: 'FaPenNib', icon: FaPenNib, label: 'UI Design' },
+{ value: 'FaUserFriends', icon: FaUserFriends, label: 'UX Research' },
+{ value: 'SiMiro', icon: SiMiro, label: 'Miro' },
+
+// === PROGRAMMING LANGUAGES EXTRA ===
+{ value: 'SiC', icon: SiC, label: 'C Language' },
+{ value: 'SiSharp', icon: SiSharp, label: 'C#' },
+{ value: 'SiFlutter', icon: SiFlutter, label: 'Flutter' },
+
+// === DEVELOPMENT TOOLS EXTRA ===
+{ value: 'SiAndroidstudio', icon: SiAndroidstudio, label: 'Android Studio' },
+{ value: 'SiIntellijidea', icon: SiIntellijidea, label: 'IntelliJ IDEA' },
+{ value: 'SiPycharm', icon: SiPycharm, label: 'PyCharm' },
+{ value: 'SiWebstorm', icon: SiWebstorm, label: 'WebStorm' },
+{ value: 'SiXcode', icon: SiXcode, label: 'Xcode' },
+{ value: 'SiOverleaf', icon: SiOverleaf, label: 'Overleaf' },
+{ value: 'SiMarkdown', icon: SiMarkdown, label: 'Markdown' },
+{ value: 'SiLatex', icon: SiLatex, label: 'LaTeX' },
+
+// === LEARNING / COURSES ===
+{ value: 'FaBookOpen', icon: FaBookOpen, label: 'Online Learning' },
+{ value: 'FaUserGraduate', icon: FaUserGraduate, label: 'Student' },
+{ value: 'SiCoursera', icon: SiCoursera, label: 'Coursera' },
+{ value: 'SiUdemy', icon: SiUdemy, label: 'Udemy' },
+{ value: 'SiEdx', icon: SiEdx, label: 'edX' },
+{ value: 'SiSololearn', icon: SiSololearn, label: 'SoloLearn' },
+
+// === CODING PRACTICE ===
+{ value: 'SiLeetcode', icon: SiLeetcode, label: 'LeetCode' },
+{ value: 'SiHackerrank', icon: SiHackerrank, label: 'HackerRank' },
+{ value: 'SiCodeforces', icon: SiCodeforces, label: 'Codeforces' },
+{ value: 'SiCodechef', icon: SiCodechef, label: 'CodeChef' },
+{ value: 'SiGeeksforgeeks', icon: SiGeeksforgeeks, label: 'GeeksforGeeks' },
+
+// === ANALYTICS / DATA ===
+{ value: 'FaChartPie', icon: FaChartPie, label: 'Data Visualization' },
+{ value: 'FaMagnifyingGlassChart', icon: FaMagnifyingGlassChart, label: 'Business Analysis' },
+
+// === NETWORKING / SECURITY ===
+{ value: 'SiCisco', icon: SiCisco, label: 'Cisco' },
+{ value: 'SiWireshark', icon: SiWireshark, label: 'Wireshark' },
+{ value: 'SiKalilinux', icon: SiKalilinux, label: 'Kali Linux' },
+{ value: 'FaFingerprint', icon: FaFingerprint, label: 'Biometric Security' },
+
+// === PROJECT MANAGEMENT ===
+{ value: 'FaTasks', icon: FaTasks, label: 'Task Management' },
+{ value: 'FaUsersGear', icon: FaUsersGear, label: 'Project Management' },
+{ value: 'SiClickup', icon: SiClickup, label: 'ClickUp' },
+{ value: 'SiClockify', icon: SiClockify, label: 'Clockify' },
+{ value: 'SiTodoist', icon: SiTodoist, label: 'Todoist' },
+
+// === COMPUTER SCIENCE ===
+{ value: 'FaCalculator', icon: FaCalculator, label: 'Discrete Mathematics' },
+{ value: 'FaAtom', icon: FaAtom, label: 'Theory of Computation' },
+{ value: 'FaCube', icon: FaCube, label: '3D Modeling' },
+{ value: 'SiScilab', icon: SiScilab, label: 'Scilab' },
 ];
 
 // Button Component
