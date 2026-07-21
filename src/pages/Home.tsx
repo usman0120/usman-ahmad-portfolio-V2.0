@@ -3,11 +3,12 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
-import { useProfile, useServices } from '../hooks/useFirestore';
+import { useProfile, useServices, useSkills, useProjects } from '../hooks/useFirestore';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import { fadeUp, staggerContainer } from '../utils/animations';
-import { FaCode, FaBrain, FaCloud, FaArrowRight, FaRobot, FaChartLine, FaCogs } from 'react-icons/fa';
-import type { Service } from '../firebase/models';
+import { FaCode, FaBrain, FaCloud, FaArrowRight, FaRobot, FaChartLine, FaCogs, FaGithub, FaExternalLinkAlt, FaStar } from 'react-icons/fa';
+import { renderIcon, getCategoryStyle, getProficiencyBarColor } from './Skills';
+import type { Service, Skill, Project } from '../firebase/models';
 
 // Animated Background Component
 const AnimatedBackground: React.FC = () => {
@@ -287,15 +288,110 @@ const StatCard: React.FC<StatCardProps> = ({ value, label, icon, delay }) => {
   );
 };
 
+// Featured Skill Card Component
+const FeaturedSkillCard: React.FC<{ skill: Skill; index: number }> = ({ skill, index }) => {
+  const categoryStyle = getCategoryStyle(skill.category);
+  const barColor = getProficiencyBarColor(skill.proficiency);
+  const proficiencyPercent = (skill.proficiency / 5) * 100;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.04, duration: 0.35 }}
+      whileHover={{ scale: 1.02, x: 5 }}
+      className="group flex items-center gap-4 bg-white dark:bg-gray-800 p-4 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
+    >
+      <div className={`flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center ${categoryStyle.iconBg} group-hover:shadow-md transition-all`}>
+        {renderIcon(skill.icon, `text-xl ${categoryStyle.accentColor}`)}
+      </div>
+
+      <div className="flex-grow min-w-0">
+        <div className="flex justify-between items-end mb-1.5">
+          <h4 className="font-semibold text-gray-800 dark:text-gray-100 text-sm truncate flex items-center gap-2">
+            {skill.name}
+            {skill.featured && <FaStar className="text-yellow-500 text-[10px]" title="Featured" />}
+          </h4>
+          <span className={`text-xs font-bold ${categoryStyle.accentColor}`}>
+            {Math.round(proficiencyPercent)}%
+          </span>
+        </div>
+        
+        <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+          <motion.div
+            className={`h-full bg-gradient-to-r ${barColor}`}
+            initial={{ width: 0 }}
+            whileInView={{ width: `${proficiencyPercent}%` }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.2, type: "spring" }}
+          />
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// Featured Project Card Component
+const FeaturedProjectCard: React.FC<{ project: Project; index: number }> = ({ project, index }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1, duration: 0.5 }}
+      whileHover={{ y: -8 }}
+      className="group flex flex-col h-full bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700"
+    >
+      <div className="relative h-48 overflow-hidden">
+        <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute top-4 right-4">
+          <span className="bg-gradient-to-r from-primary to-purple-600 text-white px-3 py-1 text-xs font-bold rounded-full shadow-lg">⭐ Featured</span>
+        </div>
+      </div>
+      <div className="p-6 flex flex-col flex-grow">
+        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">{project.title}</h3>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-3 flex-grow">{project.description}</p>
+        
+        <div className="flex flex-wrap gap-2 mb-5">
+          {project.techStack.slice(0, 3).map((tech, i) => (
+            <span key={i} className="px-2.5 py-1 text-[10px] font-semibold bg-primary/10 text-primary rounded-full">
+              {tech}
+            </span>
+          ))}
+          {project.techStack.length > 3 && (
+            <span className="px-2.5 py-1 text-[10px] font-semibold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full">
+              +{project.techStack.length - 3}
+            </span>
+          )}
+        </div>
+        
+        <div className="flex gap-3 mt-auto">
+          <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-xl text-sm font-medium bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 transition-colors">
+            <FaGithub /> Code
+          </a>
+          {project.demoUrl && (
+            <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-xl text-sm font-medium bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white shadow-md transition-colors">
+              <FaExternalLinkAlt /> Demo
+            </a>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 // Main Home Component
 const Home: React.FC = () => {
   const { profile, loading: profileLoading } = useProfile();
   const { services, loading: servicesLoading } = useServices();
+  const { skills, loading: skillsLoading } = useSkills();
+  const { projects, loading: projectsLoading } = useProjects();
 
   const profileName = 'Usman Ahmad';
   const profileImage = profile?.profileImage || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80";
 
-  // Use useMemo to compute displayed services - this avoids the setState in useEffect
   const displayedServices = useMemo(() => {
     if (!services || services.length === 0) {
       return [];
@@ -303,6 +399,16 @@ const Home: React.FC = () => {
     const featured = services.filter((s: Service) => s.featured).slice(0, 4);
     return featured.length > 0 ? featured : services.slice(0, 4);
   }, [services]);
+
+  const featuredSkills = useMemo(() => {
+    if (!skills) return [];
+    return skills.filter(s => s.featured).slice(0, 12);
+  }, [skills]);
+
+  const featuredProjects = useMemo(() => {
+    if (!projects) return [];
+    return projects.filter(p => p.featured).slice(0, 6);
+  }, [projects]);
 
   const stats = useMemo(() => [
     {
@@ -438,8 +544,106 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Services Section */}
+      {/* Featured Skills Section */}
+      <section className="py-20 relative bg-white/40 dark:bg-gray-800/20">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <motion.span
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="inline-block px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-semibold mb-4"
+            >
+              MY EXPERTISE
+            </motion.span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">
+              Featured <span className="bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">Skills</span>
+            </h2>
+          </motion.div>
+
+          {skillsLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map(i => (
+                <div key={i} className="h-20 bg-gray-200 dark:bg-gray-700 rounded-xl animate-pulse" />
+              ))}
+            </div>
+          ) : featuredSkills.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
+              {featuredSkills.map((skill, index) => (
+                <FeaturedSkillCard key={skill.id} skill={skill} index={index} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-gray-500">No featured skills found.</div>
+          )}
+
+          {featuredSkills.length > 0 && (
+            <div className="text-center mt-12">
+              <Button variant="outline" size="lg" to="/skills" icon={<FaArrowRight />}>
+                View All Skills
+              </Button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Featured Projects Section */}
       <section className="py-20 relative">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <motion.span
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="inline-block px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-semibold mb-4"
+            >
+              PORTFOLIO
+            </motion.span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">
+              Featured <span className="bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">Projects</span>
+            </h2>
+          </motion.div>
+
+          {projectsLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="h-96 bg-gray-200 dark:bg-gray-700 rounded-2xl animate-pulse" />
+              ))}
+            </div>
+          ) : featuredProjects.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredProjects.map((project, index) => (
+                <FeaturedProjectCard key={project.id} project={project} index={index} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-gray-500">No featured projects found.</div>
+          )}
+
+          {featuredProjects.length > 0 && (
+            <div className="text-center mt-12">
+              <Button variant="outline" size="lg" to="/projects" icon={<FaArrowRight />}>
+                View All Projects
+              </Button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section className="py-20 relative bg-white/40 dark:bg-gray-800/20">
         <div className="container mx-auto px-6 max-w-7xl">
           {/* Section Header */}
           <motion.div

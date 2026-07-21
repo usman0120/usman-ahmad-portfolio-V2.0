@@ -469,7 +469,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 'VscHubot': VscHubot,
 };
 
-const renderIcon = (iconName: string, className: string = '') => {
+export const renderIcon = (iconName: string, className: string = '') => {
   const IconComponent = iconMap[iconName];
   if (IconComponent) return <IconComponent className={className} />;
   // If icon name is a short emoji/string (2-3 chars), render it as text
@@ -481,7 +481,7 @@ const renderIcon = (iconName: string, className: string = '') => {
   return <FaCode className={className} />;
 };
 
-const getCategoryStyle = (category: string) => {
+export const getCategoryStyle = (category: string) => {
   const styles: Record<string, { bgGradient: string; borderColor: string; iconBg: string; accentColor: string }> = {
     full_stack: { bgGradient: 'from-indigo-500/10 to-purple-600/10', borderColor: 'border-indigo-500/30', iconBg: 'bg-indigo-100 dark:bg-indigo-900/20', accentColor: 'text-indigo-600 dark:text-indigo-400' },
     software_dev: { bgGradient: 'from-blue-500/10 to-cyan-500/10', borderColor: 'border-blue-500/30', iconBg: 'bg-blue-100 dark:bg-blue-900/20', accentColor: 'text-blue-600 dark:text-blue-400' },
@@ -507,7 +507,7 @@ const getCategoryStyle = (category: string) => {
   return styles[category] || styles.other;
 };
 
-const getProficiencyBarColor = (level: number) => {
+export const getProficiencyBarColor = (level: number) => {
   if (level >= 5) return 'from-green-500 to-emerald-500';
   if (level >= 4) return 'from-blue-500 to-cyan-500';
   if (level >= 3) return 'from-yellow-500 to-amber-500';
@@ -662,86 +662,47 @@ const ToolsCard: React.FC<{ skills: Skill[] }> = ({ skills }) => {
   );
 };
 
-// ==================== CARD 3: Main Categories Card (Compact & Clean) ====================
+// ==================== CARD 3: Main Categories Card (Compact List Style) ====================
 const MainCategoryCard: React.FC<{ skill: Skill; index: number }> = ({ skill, index }) => {
   const categoryStyle = getCategoryStyle(skill.category);
-  
-  const getProficiencyLabel = (level: number) => {
-    // Ensure level is treated as a number and within valid range
-    const proficiencyLevel = Number(level);
-    if (proficiencyLevel === 5) return 'Expert';
-    if (proficiencyLevel === 4) return 'Advanced';
-    if (proficiencyLevel === 3) return 'Intermediate';
-    if (proficiencyLevel === 2) return 'Basic';
-    return 'Beginner';
-  };
-
-  const proficiencyLabel = getProficiencyLabel(skill.proficiency);
   const barColor = getProficiencyBarColor(skill.proficiency);
   const proficiencyPercent = (skill.proficiency / 5) * 100;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.04, duration: 0.35 }}
-      whileHover={{ y: -4 }}
-      className="group"
+      whileHover={{ scale: 1.02, x: 5 }}
+      className="group flex items-center gap-4 bg-white/50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800 p-3 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
     >
-      <div className={`relative p-4 bg-white dark:bg-gray-800 rounded-xl border-l-4 ${categoryStyle.borderColor} shadow-sm hover:shadow-md transition-all duration-300`}>
-        {/* Header: Icon, Name, Featured */}
-        <div className="flex items-center gap-3 mb-3">
-          <div className={`p-2 rounded-lg ${categoryStyle.iconBg} group-hover:scale-110 transition-transform duration-300`}>
-            {renderIcon(skill.icon, `text-lg ${categoryStyle.accentColor}`)}
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <h4 className="font-semibold text-gray-800 dark:text-white text-sm truncate">
-                {skill.name}
-              </h4>
-              {skill.featured && (
-                <FaStar className="text-yellow-500 text-xs flex-shrink-0" title="Featured" />
-              )}
-            </div>
-          </div>
-        </div>
+      {/* Icon */}
+      <div className={`flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center ${categoryStyle.iconBg} group-hover:shadow-md transition-all`}>
+        {renderIcon(skill.icon, `text-xl ${categoryStyle.accentColor}`)}
+      </div>
 
-        {/* Proficiency Info */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${categoryStyle.iconBg} ${categoryStyle.accentColor}`}>
-              {proficiencyLabel}
-            </span>
-            <span className={`text-xs font-bold ${categoryStyle.accentColor}`}>
-              {Math.round(proficiencyPercent)}%
-            </span>
-          </div>
-          
-          {/* Progress Bar */}
-          <div className="relative w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-            <motion.div
-              className={`absolute inset-y-0 left-0 bg-gradient-to-r ${barColor} rounded-full`}
-              initial={{ width: 0 }}
-              whileInView={{ width: `${proficiencyPercent}%` }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-            />
-          </div>
-          
-          {/* Level Dots */}
-          <div className="flex items-center justify-end gap-1">
-            {[1, 2, 3, 4, 5].map((level) => (
-              <div
-                key={level}
-                className={`w-1.5 h-1.5 rounded-full transition-all ${
-                  level <= skill.proficiency
-                    ? `bg-gradient-to-r ${barColor}`
-                    : 'bg-gray-300 dark:bg-gray-600'
-                }`}
-              />
-            ))}
-          </div>
+      {/* Content */}
+      <div className="flex-grow min-w-0">
+        <div className="flex justify-between items-end mb-1.5">
+          <h4 className="font-semibold text-gray-800 dark:text-gray-100 text-sm truncate flex items-center gap-2">
+            {skill.name}
+            {skill.featured && <FaStar className="text-yellow-500 text-[10px]" title="Featured" />}
+          </h4>
+          <span className={`text-xs font-bold ${categoryStyle.accentColor}`}>
+            {Math.round(proficiencyPercent)}%
+          </span>
+        </div>
+        
+        {/* Progress Bar */}
+        <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+          <motion.div
+            className={`h-full bg-gradient-to-r ${barColor}`}
+            initial={{ width: 0 }}
+            whileInView={{ width: `${proficiencyPercent}%` }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.2, type: "spring" }}
+          />
         </div>
       </div>
     </motion.div>
@@ -779,83 +740,6 @@ const CategoryHeader: React.FC<{ category: typeof SKILL_CATEGORIES[0]; skillCoun
           </p>
         </div>
         <div className="flex-1 h-px bg-gradient-to-r from-primary/30 to-transparent ml-4" />
-      </div>
-    </motion.div>
-  );
-};
-
-// ==================== Featured Skills Section ====================
-const FeaturedSkillsSection: React.FC<{ skills: Skill[] }> = ({ skills }) => {
-  const featuredSkills = skills.filter(s => s.featured).slice(0, 8);
-  
-  if (featuredSkills.length === 0) return null;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="mb-16"
-    >
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500/10 border border-yellow-500/30 rounded-full mb-4">
-          <FaStar className="text-yellow-500 text-sm" />
-          <span className="text-yellow-600 dark:text-yellow-400 text-sm font-semibold">Featured Expertise</span>
-        </div>
-        <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Core Competencies
-        </h3>
-      </div>
-      
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-        {featuredSkills.map((skill, index) => {
-          const categoryStyle = getCategoryStyle(skill.category);
-          const proficiencyPercent = (skill.proficiency / 5) * 100;
-          return (
-            <motion.div
-              key={skill.id}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.08, type: "spring" }}
-              whileHover={{ y: -5 }}
-              className={`relative overflow-hidden rounded-2xl border ${categoryStyle.borderColor} bg-white dark:bg-gray-800 shadow-md hover:shadow-xl transition-all duration-300`}
-            >
-              {/* Top accent bar */}
-              <div className={`h-1 bg-gradient-to-r ${getProficiencyBarColor(skill.proficiency)}`} />
-              
-              <div className="p-5">
-                {/* Icon */}
-                <div className={`w-14 h-14 mx-auto mb-4 rounded-xl ${categoryStyle.iconBg} flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                  {renderIcon(skill.icon, `text-2xl ${categoryStyle.accentColor}`)}
-                </div>
-                
-                {/* Name */}
-                <h4 className="font-bold text-gray-800 dark:text-white text-center mb-3">
-                  {skill.name}
-                </h4>
-                
-                {/* Proficiency Badge */}
-                <div className="flex justify-center mb-3">
-                  <span className={`text-xs font-semibold px-3 py-1 rounded-full ${categoryStyle.iconBg} ${categoryStyle.accentColor}`}>
-                    {skill.proficiency >= 5 ? 'Expert' : skill.proficiency >= 4 ? 'Advanced' : skill.proficiency >= 3 ? 'Intermediate' : 'Basic'}
-                  </span>
-                </div>
-                
-                {/* Mini Progress Bar */}
-                <div className="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                  <motion.div
-                    className={`h-full rounded-full bg-gradient-to-r ${getProficiencyBarColor(skill.proficiency)}`}
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${proficiencyPercent}%` }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                  />
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
       </div>
     </motion.div>
   );
@@ -953,9 +837,6 @@ const Skills: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* Featured Skills Section */}
-<FeaturedSkillsSection skills={displaySkills} />
-
         {/* Main Skills Grid by Category - Compact Clean Design */}
         {displaySkills.length > 0 ? (
           <motion.div
@@ -972,7 +853,7 @@ const Skills: React.FC = () => {
                 <motion.div key={category.value} variants={fadeUp}>
                   <CategoryHeader category={category} skillCount={categorySkills.length} />
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-4">
                     {categorySkills.map((skill, index) => (
                       <MainCategoryCard key={skill.id} skill={skill} index={index} />
                     ))}

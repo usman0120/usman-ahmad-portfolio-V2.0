@@ -4,6 +4,11 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme';
 import { staggerContainer } from '../../utils/animations';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../firebase/firebaseClient';
+import { COLLECTIONS } from '../../firebase/models';
+import { exportToJSON, exportToPDF } from '../../utils/dataExport';
+import { parseJSONFile, restoreToFirestore } from '../../utils/dataImport';
 
 // Button Component
 interface ButtonProps {
@@ -184,7 +189,7 @@ interface PreferencesData {
 const Settings: React.FC = () => {
   const { user, logout, resetPassword } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const [activeTab, setActiveTab] = useState<'account' | 'security' | 'preferences'>('account');
+  const [activeTab, setActiveTab] = useState<'account' | 'security' | 'preferences' | 'data'>('account');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -208,6 +213,12 @@ const Settings: React.FC = () => {
     projectNotifications: true,
     messageNotifications: true
   });
+
+  // Data Management State
+  const [selectedCollection, setSelectedCollection] = useState<string>(COLLECTIONS.PROJECTS);
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [overwriteExisting, setOverwriteExisting] = useState<boolean>(true);
+  const [isDataActionRunning, setIsDataActionRunning] = useState<boolean>(false);
 
   const handleAccountUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -272,6 +283,57 @@ const Settings: React.FC = () => {
     }
   };
 
+  const handleExport = async (format: 'json' | 'pdf') => {
+    setIsDataActionRunning(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+    try {
+      const colRef = collection(db, selectedCollection);
+      const snapshot = await getDocs(colRef);
+      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      
+      if (format === 'json') {
+        exportToJSON(data, `${selectedCollection}_backup`);
+      } else if (format === 'pdf') {
+        exportToPDF(data, selectedCollection.toUpperCase());
+      }
+      setSuccessMessage(`Successfully exported ${selectedCollection} as ${format.toUpperCase()}!`);
+      setTimeout(() => setSuccessMessage(''), 3000);
+    } catch (err) {
+      console.error(err);
+      setErrorMessage(`Failed to export data: ${(err as Error).message}`);
+    } finally {
+      setIsDataActionRunning(false);
+    }
+  };
+
+  const handleImport = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!importFile) {
+      setErrorMessage('Please select a JSON file to import.');
+      return;
+    }
+    
+    setIsDataActionRunning(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+    try {
+      const data = await parseJSONFile(importFile);
+      await restoreToFirestore(selectedCollection, data, { overwriteExisting });
+      setSuccessMessage(`Successfully imported data to ${selectedCollection}!`);
+      setImportFile(null);
+      // reset file input
+      const fileInput = document.getElementById('importFileInput') as HTMLInputElement;
+      if (fileInput) fileInput.value = '';
+      setTimeout(() => setSuccessMessage(''), 3000);
+    } catch (err) {
+      console.error(err);
+      setErrorMessage(`Failed to import data: ${(err as Error).message}`);
+    } finally {
+      setIsDataActionRunning(false);
+    }
+  };
+
   const handleAccountChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setAccountData(prev => ({ ...prev, [name]: value }));
@@ -296,7 +358,8 @@ const Settings: React.FC = () => {
   const tabs = [
     { id: 'account' as const, label: 'Account', icon: '👤' },
     { id: 'security' as const, label: 'Security', icon: '🔐' },
-    { id: 'preferences' as const, label: 'Preferences', icon: '⚙️' }
+    { id: 'preferences' as const, label: 'Preferences', icon: '⚙️' },
+    { id: 'data' as const, label: 'Data Management', icon: '💾' }
   ];
 
   return (
@@ -578,6 +641,104 @@ const Settings: React.FC = () => {
                   </Button>
                 </div>
               </form>
+            </Card>
+          </motion.div>
+        )}
+
+        {/* Data Management */}
+        {activeTab === 'data' && (
+          <motion.div
+            variants={staggerContainer}
+            initial="initial"
+            animate="animate"
+            className="space-y-6"
+          >
+            <Card padding="lg">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                Backup & Restore
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                Export your Firestore collections for backup or reporting, and import JSON data to restore.
+              </p>
+              
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                  Select Collection
+                </label>
+                <select
+                  value={selectedCollection}
+                  onChange={(e) => setSelectedCollection(e.target.value)}
+                  className="w-full px-4 py-2.5 border rounded-lg bg-white dark:bg-cyber-dark/50 light:bg-white text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                >
+                  <option value={COLLECTIONS.PROJECTS}>Projects</option>
+                  <option value={COLLECTIONS.SKILLS}>Skills</option>
+                  <option value={COLLECTIONS.SERVICES}>Services</option>
+                  <option value={COLLECTIONS.PROFILE}>Profile</option>
+                  <option value={COLLECTIONS.MESSAGES}>Messages</option>
+                </select>
+              </div>
+
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-700 mb-8">
+                <h3 className="text-md font-medium text-gray-800 dark:text-gray-200 mb-4">Export Data</h3>
+                <div className="flex flex-wrap gap-4">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => handleExport('json')}
+                    disabled={isDataActionRunning}
+                    icon="📄"
+                  >
+                    Export as JSON (Backup)
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => handleExport('pdf')}
+                    disabled={isDataActionRunning}
+                    icon="📊"
+                  >
+                    Export as PDF (Report)
+                  </Button>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                <h3 className="text-md font-medium text-gray-800 dark:text-gray-200 mb-2">Import Data (Restore)</h3>
+                <p className="text-xs text-yellow-600 dark:text-yellow-500 mb-4 bg-yellow-50 dark:bg-yellow-900/20 p-2 rounded border border-yellow-200 dark:border-yellow-800">
+                  <strong>Warning:</strong> Ensure you are uploading a valid JSON backup for the selected collection.
+                </p>
+                
+                <form onSubmit={handleImport} className="space-y-5">
+                  <div>
+                    <input
+                      id="importFileInput"
+                      type="file"
+                      accept=".json"
+                      onChange={(e) => setImportFile(e.target.files?.[0] || null)}
+                      className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors"
+                      required
+                    />
+                  </div>
+
+                  <Checkbox
+                    label="Overwrite Existing Documents"
+                    checked={overwriteExisting}
+                    onChange={(checked) => setOverwriteExisting(checked)}
+                    description="If checked, existing items with the same ID will be entirely replaced by the backup. If unchecked, new fields are merged."
+                  />
+
+                  <div className="flex justify-start pt-2">
+                    <Button type="submit" variant="primary" disabled={isDataActionRunning || !importFile}>
+                      {isDataActionRunning ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          Restoring...
+                        </>
+                      ) : (
+                        'Restore from JSON'
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              </div>
             </Card>
           </motion.div>
         )}
