@@ -369,12 +369,12 @@ const Services: React.FC = () => {
               <div className="w-1 h-1 bg-gray-400 rounded-full" />
               <div className="flex items-center gap-2">
                 <FaTrophy className="text-yellow-500" />
-                <span className="text-sm text-gray-600 dark:text-gray-400">3+ Years Experience</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">2+ Years Experience</span>
               </div>
               <div className="w-1 h-1 bg-gray-400 rounded-full" />
               <div className="flex items-center gap-2">
                 <FaUsers className="text-blue-500" />
-                <span className="text-sm text-gray-600 dark:text-gray-400">15+ Happy Clients</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">05+ Happy Clients</span>
               </div>
             </motion.div>
           </motion.div>
@@ -433,7 +433,7 @@ const Services: React.FC = () => {
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid lg:grid-cols-3 gap-8">
             <StatCard value="100%" label="Client Satisfaction" icon={<FaStar />} />
-            <StatCard value="15+" label="Projects Completed" icon={<FaRocket />} />
+            <StatCard value="10+" label="Projects Completed" icon={<FaRocket />} />
             <StatCard value="24/7" label="Support Available" icon={<FaClock />} />
           </div>
         </div>
