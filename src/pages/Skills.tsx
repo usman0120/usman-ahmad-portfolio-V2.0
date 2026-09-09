@@ -662,7 +662,7 @@ const ToolsCard: React.FC<{ skills: Skill[] }> = ({ skills }) => {
   );
 };
 
-// ==================== CARD 3: Main Categories Card (Unified Modern Creative Design) ====================
+// ==================== CARD 3: Main Categories Card (Clean Simplified Row Design) ====================
 const MainCategoryCard: React.FC<{ skill: Skill; index: number }> = ({ skill, index }) => {
   const proficiencyPercent = (skill.proficiency / 5) * 100;
 
@@ -675,61 +675,53 @@ const MainCategoryCard: React.FC<{ skill: Skill; index: number }> = ({ skill, in
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, x: -10 }}
+      whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: index * 0.02, duration: 0.3 }}
-      whileHover={{ y: -2 }}
-      className="group relative overflow-hidden rounded-xl bg-gray-50/80 dark:bg-slate-800/40 hover:bg-white dark:hover:bg-slate-800/90 border border-gray-200/70 dark:border-white/[0.06] hover:border-primary/40 dark:hover:border-primary/40 shadow-sm hover:shadow-md hover:shadow-primary/5 transition-all duration-300 p-3.5 flex flex-col justify-between"
+      transition={{ delay: index * 0.02, duration: 0.25 }}
+      className="group flex items-center justify-between py-3 px-2 sm:px-3 rounded-xl hover:bg-primary/[0.04] dark:hover:bg-white/[0.03] transition-all duration-200"
     >
-      {/* Ambient hover glow */}
-      <div className="absolute -top-6 -right-6 w-20 h-20 bg-primary/10 rounded-full blur-xl group-hover:bg-primary/20 transition-all duration-500 pointer-events-none" />
-
-      {/* Top row: Icon + Title/Level + Percentage */}
-      <div className="flex items-center gap-3 relative z-10">
-        {/* Unified Icon container */}
-        <div className="relative flex-shrink-0 w-9 h-9 rounded-lg bg-gradient-to-br from-primary/15 to-purple-500/10 dark:from-primary/20 dark:to-purple-900/30 border border-primary/20 text-primary dark:text-purple-300 flex items-center justify-center text-base shadow-sm group-hover:scale-105 group-hover:bg-primary group-hover:text-white transition-all duration-300">
-          {renderIcon(skill.icon, "text-base text-current transition-colors")}
+      {/* Left: Icon + Name + Tier */}
+      <div className="flex items-center gap-3 min-w-0 pr-3">
+        <div className="w-8 h-8 rounded-lg bg-primary/10 dark:bg-primary/15 text-primary dark:text-purple-300 flex items-center justify-center text-sm flex-shrink-0 group-hover:scale-105 group-hover:bg-primary group-hover:text-white transition-all">
+          {renderIcon(skill.icon, "text-sm text-current")}
         </div>
 
-        {/* Name & Proficiency Level */}
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <h4 className="font-semibold text-gray-900 dark:text-white text-sm truncate tracking-tight group-hover:text-primary transition-colors">
+            <h4 className="font-semibold text-gray-900 dark:text-gray-100 text-sm truncate group-hover:text-primary transition-colors">
               {skill.name}
             </h4>
             {skill.featured && (
               <FaStar className="text-amber-400 text-[9px] flex-shrink-0" title="Featured Skill" />
             )}
           </div>
-          <p className="text-[10px] font-medium text-gray-400 dark:text-gray-400 tracking-wider uppercase mt-0.5">
+          <span className="text-[10px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider">
             {getProficiencyLabel(proficiencyPercent)}
-          </p>
-        </div>
-
-        {/* Percentage pill */}
-        <div className="flex-shrink-0 font-mono font-bold text-xs px-2 py-0.5 rounded-md bg-primary/10 dark:bg-primary/15 text-primary dark:text-purple-300 border border-primary/15 shadow-sm">
-          {Math.round(proficiencyPercent)}%
+          </span>
         </div>
       </div>
 
-      {/* Modern Slim Progress Bar */}
-      <div className="mt-3 relative z-10">
-        <div className="w-full h-1.5 bg-gray-200/80 dark:bg-slate-700/60 rounded-full overflow-hidden">
+      {/* Right: Inline Progress Bar & Percentage */}
+      <div className="flex items-center gap-2.5 flex-shrink-0">
+        <div className="w-20 sm:w-28 h-1.5 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
           <motion.div
-            className="h-full rounded-full bg-gradient-to-r from-primary via-purple-500 to-indigo-400 shadow-[0_0_8px_rgba(139,92,246,0.35)]"
+            className="h-full rounded-full bg-gradient-to-r from-primary to-purple-500"
             initial={{ width: 0 }}
             whileInView={{ width: `${proficiencyPercent}%` }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.05, ease: "easeOut" }}
           />
         </div>
+        <span className="font-mono font-bold text-xs text-primary dark:text-purple-400 w-8 text-right">
+          {Math.round(proficiencyPercent)}%
+        </span>
       </div>
     </motion.div>
   );
 };
 
-// Category Panel Component (Grouped Bento Design)
+// Category Panel Component (Clean Grouped Showcase Design)
 const CategoryPanel: React.FC<{ 
   category: typeof SKILL_CATEGORIES[0]; 
   skills: Skill[];
@@ -743,25 +735,25 @@ const CategoryPanel: React.FC<{
   return (
     <motion.div
       variants={fadeUp}
-      className={`rounded-2xl p-5 sm:p-6 bg-white/75 dark:bg-slate-900/60 backdrop-blur-xl border border-gray-200/80 dark:border-white/[0.08] shadow-sm hover:shadow-xl hover:shadow-primary/5 hover:border-primary/40 dark:hover:border-primary/40 transition-all duration-300 flex flex-col justify-between ${
-        isSingleView ? 'col-span-full' : ''
+      className={`rounded-2xl p-5 sm:p-6 bg-white dark:bg-slate-900/80 backdrop-blur-xl border border-gray-200/80 dark:border-white/[0.08] shadow-sm hover:shadow-lg hover:border-primary/40 dark:hover:border-primary/40 transition-all duration-300 flex flex-col justify-between ${
+        isSingleView ? 'col-span-full max-w-4xl mx-auto w-full' : ''
       }`}
     >
       {/* Category Header */}
-      <div className="flex items-center justify-between pb-4 mb-4 border-b border-gray-100 dark:border-white/[0.06]">
+      <div className="flex items-center justify-between pb-3.5 mb-2 border-b border-gray-100 dark:border-white/[0.06]">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/15 to-purple-500/10 dark:from-primary/20 dark:to-purple-900/30 text-primary dark:text-purple-300 border border-primary/20 flex items-center justify-center text-lg shadow-sm">
+          <div className="w-9 h-9 rounded-xl bg-primary/10 dark:bg-primary/20 text-primary dark:text-purple-300 border border-primary/20 flex items-center justify-center text-base shadow-sm">
             {CatIconComponent ? (
-              <CatIconComponent className="text-lg text-primary dark:text-purple-300" />
+              <CatIconComponent className="text-base text-primary dark:text-purple-300" />
             ) : (
               <span>{category.icon}</span>
             )}
           </div>
           <div>
-            <h3 className="font-bold text-gray-900 dark:text-white text-base sm:text-lg tracking-tight">
+            <h3 className="font-bold text-gray-900 dark:text-white text-base tracking-tight">
               {category.label}
             </h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-gray-400 dark:text-gray-500">
               {skills.length} {skills.length === 1 ? 'Skill' : 'Skills'}
             </p>
           </div>
@@ -772,11 +764,9 @@ const CategoryPanel: React.FC<{
         </span>
       </div>
 
-      {/* Skills Grid inside this Category */}
-      <div className={`grid gap-3 ${
-        isSingleView 
-          ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' 
-          : (skills.length > 1 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1')
+      {/* Skills list inside this Category */}
+      <div className={`divide-y divide-gray-100 dark:divide-white/[0.04] ${
+        isSingleView && skills.length > 4 ? 'grid grid-cols-1 md:grid-cols-2 gap-x-6 divide-y-0' : ''
       }`}>
         {skills.map((skill, index) => (
           <MainCategoryCard key={skill.id} skill={skill} index={index} />

@@ -288,7 +288,7 @@ const StatCard: React.FC<StatCardProps> = ({ value, label, icon, delay }) => {
   );
 };
 
-// Featured Skill Card Component
+// Featured Skill Card Component (Clean Simplified Row Design)
 const FeaturedSkillCard: React.FC<{ skill: Skill; index: number }> = ({ skill, index }) => {
   const proficiencyPercent = (skill.proficiency / 5) * 100;
 
@@ -301,55 +301,48 @@ const FeaturedSkillCard: React.FC<{ skill: Skill; index: number }> = ({ skill, i
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 14 }}
+      initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: index * 0.03, duration: 0.35 }}
-      whileHover={{ y: -3 }}
-      className="group relative overflow-hidden rounded-2xl bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl border border-gray-200/80 dark:border-white/[0.08] hover:border-primary/50 dark:hover:border-primary/50 shadow-sm hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 p-4 flex flex-col justify-between"
+      transition={{ delay: index * 0.03, duration: 0.3 }}
+      whileHover={{ y: -2 }}
+      className="group flex items-center justify-between p-3.5 rounded-xl bg-white dark:bg-slate-900/80 border border-gray-200/80 dark:border-white/[0.08] shadow-sm hover:shadow-md hover:border-primary/40 dark:hover:border-primary/40 transition-all duration-200"
     >
-      {/* Ambient hover glow */}
-      <div className="absolute -top-8 -right-8 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all duration-500 pointer-events-none" />
-
-      {/* Top row: Icon + Title/Level + Percentage */}
-      <div className="flex items-center gap-3.5 relative z-10">
-        {/* Unified Icon container */}
-        <div className="relative flex-shrink-0 w-11 h-11 rounded-xl bg-gradient-to-br from-primary/15 to-purple-500/10 dark:from-primary/20 dark:to-purple-900/30 border border-primary/20 text-primary dark:text-purple-300 flex items-center justify-center text-xl shadow-[0_0_12px_rgba(139,92,246,0.1)] group-hover:scale-105 group-hover:bg-primary group-hover:text-white group-hover:shadow-[0_0_18px_rgba(139,92,246,0.35)] transition-all duration-300">
-          {renderIcon(skill.icon, "text-xl text-current transition-colors")}
+      {/* Left: Icon + Name + Tier */}
+      <div className="flex items-center gap-3 min-w-0 pr-3">
+        <div className="w-9 h-9 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary dark:text-purple-300 flex items-center justify-center text-base flex-shrink-0 group-hover:scale-105 group-hover:bg-primary group-hover:text-white transition-all">
+          {renderIcon(skill.icon, "text-base text-current")}
         </div>
 
-        {/* Name & Proficiency Level */}
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <h4 className="font-semibold text-gray-900 dark:text-white text-sm truncate tracking-tight group-hover:text-primary transition-colors">
+            <h4 className="font-semibold text-gray-900 dark:text-gray-100 text-sm truncate group-hover:text-primary transition-colors">
               {skill.name}
             </h4>
             {skill.featured && (
-              <FaStar className="text-amber-400 text-[10px] flex-shrink-0" title="Featured Skill" />
+              <FaStar className="text-amber-400 text-[9px] flex-shrink-0" title="Featured Skill" />
             )}
           </div>
-          <p className="text-[11px] font-medium text-gray-400 dark:text-gray-400 tracking-wide uppercase mt-0.5">
+          <span className="text-[10px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider">
             {getProficiencyLabel(proficiencyPercent)}
-          </p>
-        </div>
-
-        {/* Percentage pill */}
-        <div className="flex-shrink-0 font-mono font-bold text-xs px-2.5 py-1 rounded-lg bg-primary/10 dark:bg-primary/15 text-primary dark:text-purple-300 border border-primary/20 shadow-sm">
-          {Math.round(proficiencyPercent)}%
+          </span>
         </div>
       </div>
 
-      {/* Modern Slim Progress Bar */}
-      <div className="mt-3.5 relative z-10">
-        <div className="w-full h-1.5 bg-gray-100 dark:bg-slate-800/90 rounded-full overflow-hidden">
+      {/* Right: Inline Progress Bar & Percentage */}
+      <div className="flex items-center gap-2.5 flex-shrink-0">
+        <div className="w-20 sm:w-28 h-1.5 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
           <motion.div
-            className="h-full rounded-full bg-gradient-to-r from-primary via-purple-500 to-indigo-400 shadow-[0_0_8px_rgba(139,92,246,0.4)]"
+            className="h-full rounded-full bg-gradient-to-r from-primary to-purple-500"
             initial={{ width: 0 }}
             whileInView={{ width: `${proficiencyPercent}%` }}
             viewport={{ once: true }}
-            transition={{ duration: 0.9, delay: 0.1, ease: "easeOut" }}
+            transition={{ duration: 0.8, delay: 0.05, ease: "easeOut" }}
           />
         </div>
+        <span className="font-mono font-bold text-xs text-primary dark:text-purple-400 w-8 text-right">
+          {Math.round(proficiencyPercent)}%
+        </span>
       </div>
     </motion.div>
   );
