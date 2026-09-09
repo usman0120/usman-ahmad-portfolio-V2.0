@@ -3,7 +3,7 @@ import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
-import { FaCode, FaBars, FaTimes } from 'react-icons/fa';
+import { FaBars, FaTimes } from 'react-icons/fa';
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -145,23 +145,6 @@ const Navbar: React.FC = () => {
                 )}
               </motion.div>
             </motion.button>
-
-            {/* Admin Link */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.45 }}
-            >
-              <Link
-                to="/admin/login"
-                className="relative ml-1 px-4 py-2 bg-gradient-to-r from-primary/10 to-purple-600/10 text-primary text-xs font-medium rounded-xl border border-primary/30 hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 flex items-center gap-1.5 group overflow-hidden"
-              >
-                <span className="relative z-10 flex items-center gap-1.5">
-                  <FaCode className="text-[10px]" />
-                  ADMIN
-                </span>
-              </Link>
-            </motion.div>
           </div>
 
           {/* Mobile Menu Button */}
@@ -258,21 +241,6 @@ const Navbar: React.FC = () => {
                     {theme === 'dark' ? '☀️' : '🌙'}
                   </span>
                 </motion.button>
-
-                {/* Mobile Admin Link */}
-                <motion.div
-                  initial={{ x: -20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 0.35 }}
-                >
-                  <Link
-                    to="/admin/login"
-                    className="flex items-center gap-3 py-3 px-4 rounded-xl text-sm font-medium bg-gradient-to-r from-primary/10 to-purple-600/10 text-primary border border-primary/30 hover:bg-primary hover:text-white transition-all duration-300"
-                  >
-                    <FaCode className="text-xs" />
-                    <span>Admin Access</span>
-                  </Link>
-                </motion.div>
               </div>
             </motion.div>
           )}

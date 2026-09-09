@@ -675,21 +675,21 @@ const MainCategoryCard: React.FC<{ skill: Skill; index: number }> = ({ skill, in
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 14 }}
+      initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: index * 0.03, duration: 0.35 }}
-      whileHover={{ y: -3 }}
-      className="group relative overflow-hidden rounded-2xl bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl border border-gray-200/80 dark:border-white/[0.08] hover:border-primary/50 dark:hover:border-primary/50 shadow-sm hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 p-4 flex flex-col justify-between"
+      transition={{ delay: index * 0.02, duration: 0.3 }}
+      whileHover={{ y: -2 }}
+      className="group relative overflow-hidden rounded-xl bg-gray-50/80 dark:bg-slate-800/40 hover:bg-white dark:hover:bg-slate-800/90 border border-gray-200/70 dark:border-white/[0.06] hover:border-primary/40 dark:hover:border-primary/40 shadow-sm hover:shadow-md hover:shadow-primary/5 transition-all duration-300 p-3.5 flex flex-col justify-between"
     >
       {/* Ambient hover glow */}
-      <div className="absolute -top-8 -right-8 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all duration-500 pointer-events-none" />
+      <div className="absolute -top-6 -right-6 w-20 h-20 bg-primary/10 rounded-full blur-xl group-hover:bg-primary/20 transition-all duration-500 pointer-events-none" />
 
       {/* Top row: Icon + Title/Level + Percentage */}
-      <div className="flex items-center gap-3.5 relative z-10">
+      <div className="flex items-center gap-3 relative z-10">
         {/* Unified Icon container */}
-        <div className="relative flex-shrink-0 w-11 h-11 rounded-xl bg-gradient-to-br from-primary/15 to-purple-500/10 dark:from-primary/20 dark:to-purple-900/30 border border-primary/20 text-primary dark:text-purple-300 flex items-center justify-center text-xl shadow-[0_0_12px_rgba(139,92,246,0.1)] group-hover:scale-105 group-hover:bg-primary group-hover:text-white group-hover:shadow-[0_0_18px_rgba(139,92,246,0.35)] transition-all duration-300">
-          {renderIcon(skill.icon, "text-xl text-current transition-colors")}
+        <div className="relative flex-shrink-0 w-9 h-9 rounded-lg bg-gradient-to-br from-primary/15 to-purple-500/10 dark:from-primary/20 dark:to-purple-900/30 border border-primary/20 text-primary dark:text-purple-300 flex items-center justify-center text-base shadow-sm group-hover:scale-105 group-hover:bg-primary group-hover:text-white transition-all duration-300">
+          {renderIcon(skill.icon, "text-base text-current transition-colors")}
         </div>
 
         {/* Name & Proficiency Level */}
@@ -699,29 +699,29 @@ const MainCategoryCard: React.FC<{ skill: Skill; index: number }> = ({ skill, in
               {skill.name}
             </h4>
             {skill.featured && (
-              <FaStar className="text-amber-400 text-[10px] flex-shrink-0" title="Featured Skill" />
+              <FaStar className="text-amber-400 text-[9px] flex-shrink-0" title="Featured Skill" />
             )}
           </div>
-          <p className="text-[11px] font-medium text-gray-400 dark:text-gray-400 tracking-wide uppercase mt-0.5">
+          <p className="text-[10px] font-medium text-gray-400 dark:text-gray-400 tracking-wider uppercase mt-0.5">
             {getProficiencyLabel(proficiencyPercent)}
           </p>
         </div>
 
         {/* Percentage pill */}
-        <div className="flex-shrink-0 font-mono font-bold text-xs px-2.5 py-1 rounded-lg bg-primary/10 dark:bg-primary/15 text-primary dark:text-purple-300 border border-primary/20 shadow-sm">
+        <div className="flex-shrink-0 font-mono font-bold text-xs px-2 py-0.5 rounded-md bg-primary/10 dark:bg-primary/15 text-primary dark:text-purple-300 border border-primary/15 shadow-sm">
           {Math.round(proficiencyPercent)}%
         </div>
       </div>
 
       {/* Modern Slim Progress Bar */}
-      <div className="mt-3.5 relative z-10">
-        <div className="w-full h-1.5 bg-gray-100 dark:bg-slate-800/90 rounded-full overflow-hidden">
+      <div className="mt-3 relative z-10">
+        <div className="w-full h-1.5 bg-gray-200/80 dark:bg-slate-700/60 rounded-full overflow-hidden">
           <motion.div
-            className="h-full rounded-full bg-gradient-to-r from-primary via-purple-500 to-indigo-400 shadow-[0_0_8px_rgba(139,92,246,0.4)]"
+            className="h-full rounded-full bg-gradient-to-r from-primary via-purple-500 to-indigo-400 shadow-[0_0_8px_rgba(139,92,246,0.35)]"
             initial={{ width: 0 }}
             whileInView={{ width: `${proficiencyPercent}%` }}
             viewport={{ once: true }}
-            transition={{ duration: 0.9, delay: 0.1, ease: "easeOut" }}
+            transition={{ duration: 0.8, delay: 0.05, ease: "easeOut" }}
           />
         </div>
       </div>
@@ -729,37 +729,58 @@ const MainCategoryCard: React.FC<{ skill: Skill; index: number }> = ({ skill, in
   );
 };
 
-// Category Header Component
-const CategoryHeader: React.FC<{ category: typeof SKILL_CATEGORIES[0]; skillCount: number }> = ({ 
-  category, 
-  skillCount 
-}) => {
+// Category Panel Component (Grouped Bento Design)
+const CategoryPanel: React.FC<{ 
+  category: typeof SKILL_CATEGORIES[0]; 
+  skills: Skill[];
+  isSingleView?: boolean;
+}> = ({ category, skills, isSingleView }) => {
+  const CatIconComponent = iconMap[category.icon];
+  const avgProficiency = Math.round(
+    skills.reduce((acc, s) => acc + (s.proficiency / 5) * 100, 0) / (skills.length || 1)
+  );
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="mb-6"
+      variants={fadeUp}
+      className={`rounded-2xl p-5 sm:p-6 bg-white/75 dark:bg-slate-900/60 backdrop-blur-xl border border-gray-200/80 dark:border-white/[0.08] shadow-sm hover:shadow-xl hover:shadow-primary/5 hover:border-primary/40 dark:hover:border-primary/40 transition-all duration-300 flex flex-col justify-between ${
+        isSingleView ? 'col-span-full' : ''
+      }`}
     >
-      <div className="flex items-center gap-3">
-        <div className={`w-10 h-10 bg-gradient-to-br ${category.color} rounded-xl flex items-center justify-center text-xl shadow-md`}>
-  {(() => {
-    const CatIconComponent = iconMap[category.icon];
-    if (CatIconComponent) {
-      return <CatIconComponent className="text-white text-lg" />;
-    }
-    return <span className="text-white">{category.icon}</span>;
-  })()}
-</div>
-        <div>
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-            {category.label}
-          </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            {skillCount} {skillCount === 1 ? 'Skill' : 'Skills'}
-          </p>
+      {/* Category Header */}
+      <div className="flex items-center justify-between pb-4 mb-4 border-b border-gray-100 dark:border-white/[0.06]">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/15 to-purple-500/10 dark:from-primary/20 dark:to-purple-900/30 text-primary dark:text-purple-300 border border-primary/20 flex items-center justify-center text-lg shadow-sm">
+            {CatIconComponent ? (
+              <CatIconComponent className="text-lg text-primary dark:text-purple-300" />
+            ) : (
+              <span>{category.icon}</span>
+            )}
+          </div>
+          <div>
+            <h3 className="font-bold text-gray-900 dark:text-white text-base sm:text-lg tracking-tight">
+              {category.label}
+            </h3>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              {skills.length} {skills.length === 1 ? 'Skill' : 'Skills'}
+            </p>
+          </div>
         </div>
-        <div className="flex-1 h-px bg-gradient-to-r from-primary/30 to-transparent ml-4" />
+
+        <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded-lg bg-primary/10 text-primary dark:text-purple-300 border border-primary/20">
+          {avgProficiency}% avg
+        </span>
+      </div>
+
+      {/* Skills Grid inside this Category */}
+      <div className={`grid gap-3 ${
+        isSingleView 
+          ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' 
+          : (skills.length > 1 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1')
+      }`}>
+        {skills.map((skill, index) => (
+          <MainCategoryCard key={skill.id} skill={skill} index={index} />
+        ))}
       </div>
     </motion.div>
   );
@@ -807,10 +828,18 @@ const Skills: React.FC = () => {
     return acc;
   }, {} as Record<string, Skill[]>);
 
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
   // Main categories (excluding soft and tools)
   const mainCategories = SKILL_CATEGORIES.filter(cat => 
     !['soft', 'tools'].includes(cat.value) && skillsByCategory[cat.value]?.length > 0
   );
+
+  const filteredCategories = selectedCategory === 'all'
+    ? mainCategories
+    : mainCategories.filter(cat => cat.value === selectedCategory);
+
+  const totalMainSkills = mainCategories.reduce((sum, cat) => sum + (skillsByCategory[cat.value]?.length || 0), 0);
 
   // Get skills for special sections
   const softSkills = displaySkills.filter(s => s.category === 'soft');
@@ -834,7 +863,7 @@ const Skills: React.FC = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
           <motion.span
             initial={{ opacity: 0, scale: 0.8 }}
@@ -857,28 +886,69 @@ const Skills: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* Main Skills Grid by Category - Compact Clean Design */}
-        {displaySkills.length > 0 ? (
+        {/* Category Filter Tabs */}
+        {mainCategories.length > 1 && (
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
+            <button
+              onClick={() => setSelectedCategory('all')}
+              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                selectedCategory === 'all'
+                  ? 'bg-gradient-to-r from-primary to-purple-600 text-white shadow-md shadow-primary/25 scale-105'
+                  : 'bg-white/80 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-primary/50 hover:text-primary'
+              }`}
+            >
+              <span>✨ All Categories</span>
+              <span className={`text-[11px] px-1.5 py-0.5 rounded-md font-mono ${selectedCategory === 'all' ? 'bg-white/20 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400'}`}>
+                {totalMainSkills}
+              </span>
+            </button>
+
+            {mainCategories.map((cat) => {
+              const count = skillsByCategory[cat.value]?.length || 0;
+              const isSelected = selectedCategory === cat.value;
+              const CatIcon = iconMap[cat.icon];
+
+              return (
+                <button
+                  key={cat.value}
+                  onClick={() => setSelectedCategory(cat.value)}
+                  className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                    isSelected
+                      ? 'bg-gradient-to-r from-primary to-purple-600 text-white shadow-md shadow-primary/25 scale-105'
+                      : 'bg-white/80 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-primary/50 hover:text-primary'
+                  }`}
+                >
+                  {CatIcon ? <CatIcon className="text-xs" /> : <span>{cat.icon}</span>}
+                  <span>{cat.label}</span>
+                  <span className={`text-[11px] px-1.5 py-0.5 rounded-md font-mono ${isSelected ? 'bg-white/20 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400'}`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Main Skills Grid by Category - Grouped Bento Design */}
+        {filteredCategories.length > 0 ? (
           <motion.div
+            key={selectedCategory}
             variants={staggerContainer}
             initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-            className="space-y-12"
+            animate="animate"
+            className="grid grid-cols-1 lg:grid-cols-2 gap-6"
           >
-            {mainCategories.map((category) => {
+            {filteredCategories.map((category) => {
               const categorySkills = skillsByCategory[category.value] || [];
-              
-              return (
-                <motion.div key={category.value} variants={fadeUp}>
-                  <CategoryHeader category={category} skillCount={categorySkills.length} />
+              if (categorySkills.length === 0) return null;
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-4">
-                    {categorySkills.map((skill, index) => (
-                      <MainCategoryCard key={skill.id} skill={skill} index={index} />
-                    ))}
-                  </div>
-                </motion.div>
+              return (
+                <CategoryPanel
+                  key={category.value}
+                  category={category}
+                  skills={categorySkills}
+                  isSingleView={selectedCategory !== 'all'}
+                />
               );
             })}
           </motion.div>
