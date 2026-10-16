@@ -178,7 +178,7 @@ src/
 
 1. **Clone the repository**
 
-git clone <https://github.com/usmanahmad/portfolio.git>
+git clone <https://github.com/usman0120/usman-ahmad-portfolio-V2.0.git>
 cd portfolio
 
 1. **Install dependencies**
@@ -457,15 +457,14 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ### Usman Ahmad
 
-- 🌐 **Website**: [usman-portfolio.web.app](https://usman-portfolio.web.app)
-- 📧 **Email**: <usman@example.com>
-- 💼 **LinkedIn**: [linkedin.com/in/usman-ahmad](https://linkedin.com/in/usman-ahmad)
-- 🐙 **GitHub**: [github.com/usmanahmad](https://github.com/usmanahmad)
+- 🌐 **Website**: https://usman-portfolio-silk.vercel.app/contact
+- 💼 **LinkedIn**: [linkedin.com/in/usman0120](https://linkedin.com/in/0120)
+- 🐙 **GitHub**: [github.com/usmanahmad](https://github.com/uaman0120)
 
 ### Support
 
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/usmanahmad/portfolio/issues)
-- 💡 **Feature Requests**: [GitHub Issues](https://github.com/usmanahmad/portfolio/issues)
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/usman0120/usman-ahmad-portfolio-V2.0/issues)
+- 💡 **Feature Requests**: [GitHub Issues](https://github.com/usman0120/usman-ahmad-portfolio-V2.0/issues)
 
 ---
 
