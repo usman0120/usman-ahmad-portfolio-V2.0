@@ -6,7 +6,11 @@ import { useInView } from 'react-intersection-observer';
 import { useProfile, useServices, useSkills, useProjects } from '../hooks/useFirestore';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import { fadeUp, staggerContainer } from '../utils/animations';
-import { FaCode, FaBrain, FaCloud, FaArrowRight, FaRobot, FaChartLine, FaCogs, FaGithub, FaExternalLinkAlt, FaStar } from 'react-icons/fa';
+import { 
+  FaCode, FaBrain, FaCloud, FaArrowRight, FaRobot, FaChartLine, FaCogs, 
+  FaGithub, FaExternalLinkAlt, FaStar, FaMobileAlt, FaPaintBrush, 
+  FaShoppingCart, FaDatabase, FaLock, FaServer, FaLaptopCode 
+} from 'react-icons/fa';
 import { renderIcon } from './Skills';
 import type { Service, Skill, Project } from '../firebase/models';
 
@@ -187,11 +191,20 @@ const TypewriterText: React.FC<{ texts: string[] }> = ({ texts }) => {
   );
 };
 
-// Service Card Component for Home Page
+// Service Card Component for Home Page with Full Background Service Image
 interface ServiceCardProps {
   service: Service;
   index: number;
 }
+
+const FALLBACK_SERVICE_IMAGES = [
+  "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80", // Web / Coding
+  "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80", // AI / Machine Learning
+  "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80", // Cloud / Network
+  "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80", // Analytics / Data
+  "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80", // Security / Backend
+  "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80", // Mobile App Dev
+];
 
 const ServiceCard: React.FC<ServiceCardProps> = ({ service, index }) => {
   const [ref, inView] = useInView({
@@ -199,16 +212,31 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, index }) => {
     threshold: 0.1
   });
 
+  const defaultImg = FALLBACK_SERVICE_IMAGES[index % FALLBACK_SERVICE_IMAGES.length];
+  const [imgSrc, setImgSrc] = useState<string>(service.imageUrl || defaultImg);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setImgSrc(service.imageUrl || defaultImg);
+  }, [service.imageUrl, defaultImg]);
+
   const getIcon = (iconName: string): React.ReactNode => {
     const icons: Record<string, React.ReactNode> = {
-      FaCode: <FaCode className="text-2xl" />,
-      FaBrain: <FaBrain className="text-2xl" />,
-      FaRobot: <FaRobot className="text-2xl" />,
-      FaCloud: <FaCloud className="text-2xl" />,
-      FaChartLine: <FaChartLine className="text-2xl" />,
-      FaCogs: <FaCogs className="text-2xl" />
+      FaCode: <FaCode className="text-xl" />,
+      FaBrain: <FaBrain className="text-xl" />,
+      FaRobot: <FaRobot className="text-xl" />,
+      FaCloud: <FaCloud className="text-xl" />,
+      FaChartLine: <FaChartLine className="text-xl" />,
+      FaCogs: <FaCogs className="text-xl" />,
+      FaMobileAlt: <FaMobileAlt className="text-xl" />,
+      FaPaintBrush: <FaPaintBrush className="text-xl" />,
+      FaShoppingCart: <FaShoppingCart className="text-xl" />,
+      FaDatabase: <FaDatabase className="text-xl" />,
+      FaLock: <FaLock className="text-xl" />,
+      FaServer: <FaServer className="text-xl" />,
+      FaLaptopCode: <FaLaptopCode className="text-xl" />
     };
-    return icons[iconName] || <FaCode className="text-2xl" />;
+    return icons[iconName] || <FaCode className="text-xl" />;
   };
 
   return (
@@ -218,36 +246,85 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, index }) => {
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
       transition={{ delay: index * 0.1, duration: 0.5 }}
       whileHover={{ y: -8 }}
-      className="group relative overflow-hidden bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500"
+      className="group relative overflow-hidden rounded-2xl min-h-[420px] flex flex-col justify-between p-6 shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-200/50 dark:border-white/10"
     >
-      {/* Gradient border on hover */}
-      <div className="absolute inset-0 bg-gradient-to-r from-primary via-purple-500 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
-      <div className="absolute inset-[2px] bg-white dark:bg-gray-800 rounded-2xl" />
-      
-      <div className="relative p-6 z-10">
-        {/* Icon */}
+      {/* Full Background Service Image */}
+      <div className="absolute inset-0 overflow-hidden">
+        <img
+          src={imgSrc}
+          alt={service.title}
+          onError={() => setImgSrc(defaultImg)}
+          className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700 ease-out"
+        />
+        {/* Multi-layer Dark Gradient Overlays for optimal text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/75 to-black/35 group-hover:via-black/60 transition-colors duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/25 via-transparent to-purple-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      </div>
+
+      {/* Interactive Border Highlight */}
+      <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/15 group-hover:ring-primary/60 transition-all duration-500 pointer-events-none" />
+
+      {/* Card Header (Floating Glass Icon & Badge) */}
+      <div className="relative z-10 flex items-center justify-between">
+        {/* Glassmorphic Icon Badge */}
         <motion.div
-          className="w-14 h-14 bg-gradient-to-br from-primary/20 to-purple-500/20 rounded-xl flex items-center justify-center mb-5 group-hover:from-primary group-hover:to-purple-500 transition-all duration-300"
-          whileHover={{ rotate: 5, scale: 1.1 }}
+          whileHover={{ rotate: 6, scale: 1.08 }}
+          className="w-12 h-12 rounded-xl bg-white/15 backdrop-blur-md border border-white/20 text-white flex items-center justify-center shadow-lg group-hover:bg-primary group-hover:border-primary transition-all duration-300"
         >
-          <div className="text-primary group-hover:text-white transition-colors duration-300">
-            {getIcon(service.icon)}
-          </div>
+          {getIcon(service.icon)}
         </motion.div>
 
-        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+        {/* Featured Badge or Index Number */}
+        {service.featured ? (
+          <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-400/20 backdrop-blur-md border border-amber-400/40 rounded-full text-amber-300 text-xs font-semibold shadow-sm">
+            <FaStar className="text-[10px]" />
+            <span>Featured</span>
+          </div>
+        ) : (
+          <span className="text-xs font-mono font-bold text-white/60 bg-black/40 backdrop-blur-sm border border-white/10 px-2.5 py-1 rounded-full">
+            0{index + 1}
+          </span>
+        )}
+      </div>
+
+      {/* Card Bottom Content */}
+      <div className="relative z-10 flex flex-col justify-end mt-auto pt-6">
+        {/* Technologies Pills */}
+        {service.technologies && service.technologies.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-2.5">
+            {service.technologies.slice(0, 3).map((tech, idx) => (
+              <span
+                key={idx}
+                className="px-2 py-0.5 text-[10px] font-medium bg-white/15 backdrop-blur-md text-gray-200 rounded-md border border-white/10"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Title */}
+        <h3 className="text-xl font-bold text-white group-hover:text-purple-300 transition-colors duration-300 mb-2 drop-shadow-sm line-clamp-1">
           {service.title}
         </h3>
-        <p className="text-gray-600 dark:text-gray-400 text-sm mb-5 line-clamp-3">
-          {service.description}
+
+        {/* Tagline or Description */}
+        <p className="text-gray-300 text-xs sm:text-sm leading-relaxed mb-4 line-clamp-2 drop-shadow">
+          {service.tagline || service.description}
         </p>
 
+        {/* Link Button */}
         <Link
           to={`/services/${service.slug}`}
-          className="inline-flex items-center gap-2 text-primary font-medium group/link"
+          className="inline-flex items-center justify-between w-full pt-3 border-t border-white/15 group/link text-sm font-medium text-white/90 hover:text-white transition-colors"
         >
-          <span>Learn More</span>
-          <FaArrowRight className="text-sm transition-transform duration-300 group-hover/link:translate-x-1" />
+          <span className="flex items-center gap-2 group-hover/link:text-purple-300 transition-colors">
+            <span>Learn More</span>
+            <FaArrowRight className="text-xs transition-transform duration-300 group-hover/link:translate-x-1" />
+          </span>
+          <span className="w-7 h-7 rounded-full bg-white/10 group-hover/link:bg-primary border border-white/20 group-hover/link:border-primary flex items-center justify-center transition-all duration-300 text-white text-xs">
+            →
+          </span>
         </Link>
       </div>
     </motion.div>
@@ -288,9 +365,9 @@ const StatCard: React.FC<StatCardProps> = ({ value, label, icon, delay }) => {
   );
 };
 
-// Featured Skill Card Component (Clean Simplified Row Design)
+// Featured Skill Card Component (Clean Responsive Modern Design)
 const FeaturedSkillCard: React.FC<{ skill: Skill; index: number }> = ({ skill, index }) => {
-  const proficiencyPercent = (skill.proficiency / 5) * 100;
+  const proficiencyPercent = Math.min(100, Math.max(0, (skill.proficiency / 5) * 100));
 
   const getProficiencyLabel = (percent: number) => {
     if (percent >= 90) return 'Expert';
@@ -305,33 +382,33 @@ const FeaturedSkillCard: React.FC<{ skill: Skill; index: number }> = ({ skill, i
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.03, duration: 0.3 }}
-      whileHover={{ y: -2 }}
-      className="group flex items-center justify-between p-3.5 rounded-xl bg-white dark:bg-slate-900/80 border border-gray-200/80 dark:border-white/[0.08] shadow-sm hover:shadow-md hover:border-primary/40 dark:hover:border-primary/40 transition-all duration-200"
+      whileHover={{ y: -3 }}
+      className="group flex flex-col justify-between p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-gray-200/80 dark:border-white/[0.08] shadow-sm hover:shadow-md hover:border-primary/40 dark:hover:border-primary/40 transition-all duration-200"
     >
-      {/* Left: Icon + Name + Tier */}
-      <div className="flex items-center gap-3 min-w-0 pr-3">
-        <div className="w-9 h-9 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary dark:text-purple-300 flex items-center justify-center text-base flex-shrink-0 group-hover:scale-105 group-hover:bg-primary group-hover:text-white transition-all">
-          {renderIcon(skill.icon, "text-base text-current")}
+      {/* Top: Icon + Title & Badge */}
+      <div className="flex items-start gap-3 w-full mb-3">
+        <div className="w-10 h-10 rounded-xl bg-primary/10 dark:bg-primary/20 text-primary dark:text-purple-300 flex items-center justify-center text-lg flex-shrink-0 group-hover:scale-105 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+          {renderIcon(skill.icon, "text-lg text-current")}
         </div>
 
-        <div className="min-w-0">
-          <div className="flex items-center gap-1.5">
-            <h4 className="font-semibold text-gray-900 dark:text-gray-100 text-sm truncate group-hover:text-primary transition-colors">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <h4 className="font-semibold text-gray-900 dark:text-gray-100 text-sm sm:text-base leading-snug group-hover:text-primary transition-colors">
               {skill.name}
             </h4>
             {skill.featured && (
-              <FaStar className="text-amber-400 text-[9px] flex-shrink-0" title="Featured Skill" />
+              <FaStar className="text-amber-400 text-[10px] flex-shrink-0" title="Featured Skill" />
             )}
           </div>
-          <span className="text-[10px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+          <span className="text-[11px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider">
             {getProficiencyLabel(proficiencyPercent)}
           </span>
         </div>
       </div>
 
-      {/* Right: Inline Progress Bar & Percentage */}
-      <div className="flex items-center gap-2.5 flex-shrink-0">
-        <div className="w-20 sm:w-28 h-1.5 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
+      {/* Bottom: Progress Bar & Percentage */}
+      <div className="w-full pt-2 border-t border-gray-100 dark:border-white/[0.06] flex items-center justify-between gap-3">
+        <div className="flex-1 h-1.5 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
           <motion.div
             className="h-full rounded-full bg-gradient-to-r from-primary to-purple-500"
             initial={{ width: 0 }}
@@ -340,7 +417,7 @@ const FeaturedSkillCard: React.FC<{ skill: Skill; index: number }> = ({ skill, i
             transition={{ duration: 0.8, delay: 0.05, ease: "easeOut" }}
           />
         </div>
-        <span className="font-mono font-bold text-xs text-primary dark:text-purple-400 w-8 text-right">
+        <span className="font-mono font-bold text-xs text-primary dark:text-purple-400 flex-shrink-0">
           {Math.round(proficiencyPercent)}%
         </span>
       </div>
@@ -584,9 +661,9 @@ const Home: React.FC = () => {
           </motion.div>
 
           {skillsLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i} className="h-20 bg-gray-200 dark:bg-gray-700 rounded-xl animate-pulse" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
+                <div key={i} className="h-28 bg-gray-200 dark:bg-gray-700/60 rounded-2xl animate-pulse" />
               ))}
             </div>
           ) : featuredSkills.length > 0 ? (
@@ -702,7 +779,7 @@ const Home: React.FC = () => {
           {servicesLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[1, 2, 3, 4].map(i => (
-                <div key={i} className="h-80 bg-gray-200 dark:bg-gray-700 rounded-2xl animate-pulse" />
+                <div key={i} className="h-[420px] bg-gray-200 dark:bg-gray-700/60 rounded-2xl animate-pulse" />
               ))}
             </div>
           ) : displayedServices.length > 0 ? (

@@ -31,7 +31,7 @@ const iconMap: Record<string, React.ReactNode> = {
   FaServer: <FaServer className="text-2xl" />
 };
 
-// Service Card Component
+// Service Card Component - Clean, Professional & Modern
 interface ServiceCardProps {
   service: Service;
   index: number;
@@ -40,114 +40,89 @@ interface ServiceCardProps {
 const ServiceCard: React.FC<ServiceCardProps> = ({ service, index }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ delay: index * 0.1, duration: 0.6, ease: "easeOut" }}
-      whileHover={{ y: -10 }}
-      className="group relative h-full"
+      viewport={{ once: true, margin: "-30px" }}
+      transition={{ delay: index * 0.08, duration: 0.4, ease: "easeOut" }}
+      whileHover={{ y: -6 }}
+      className="group relative flex flex-col h-full bg-white dark:bg-slate-900 rounded-2xl border border-gray-200/80 dark:border-white/[0.08] shadow-sm hover:shadow-xl hover:border-primary/40 dark:hover:border-primary/40 transition-all duration-300 overflow-hidden"
     >
-      {/* Animated border gradient */}
-      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary via-purple-500 to-blue-500 rounded-2xl opacity-0 group-hover:opacity-100 blur transition-all duration-500" />
-      
-      <div className="relative h-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
-        {/* Top gradient bar */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-purple-500 to-blue-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
-        
-        <div className="p-8 h-full flex flex-col">
-          {/* Icon and Featured Badge */}
-          <div className="flex items-start justify-between mb-6">
-            <motion.div
-              whileHover={{ rotate: 5, scale: 1.1 }}
-              className="relative"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-primary to-purple-600 rounded-xl blur-lg opacity-0 group-hover:opacity-40 transition-opacity duration-300" />
-              <div className="relative w-16 h-16 bg-gradient-to-br from-primary/10 to-purple-500/10 rounded-xl flex items-center justify-center group-hover:from-primary group-hover:to-purple-600 transition-all duration-300 shadow-lg">
-                <div className="text-primary group-hover:text-white transition-colors duration-300">
-                  {iconMap[service.icon] || <FaCode className="text-2xl" />}
-                </div>
-              </div>
-            </motion.div>
-            
-            {service.featured && (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.2 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 rounded-full border border-yellow-400/30"
-              >
-                <FaStar className="text-yellow-500 text-xs" />
-                <span className="text-yellow-600 dark:text-yellow-400 text-xs font-semibold">Featured</span>
-              </motion.div>
-            )}
+      {/* Top accent line on hover */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-purple-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+      <div className="p-7 sm:p-8 flex flex-col flex-grow">
+        {/* Header: Icon & Badge */}
+        <div className="flex items-start justify-between gap-4 mb-6">
+          <div className="w-14 h-14 rounded-xl bg-primary/10 dark:bg-primary/20 text-primary dark:text-purple-300 flex items-center justify-center text-2xl flex-shrink-0 group-hover:scale-105 group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-sm">
+            {iconMap[service.icon] || <FaCode className="text-2xl" />}
           </div>
 
-          {/* Content */}
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary transition-colors duration-300">
-            {service.title}
-          </h3>
-          
-          <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-6 flex-grow">
-            {service.tagline || service.description}
-          </p>
-
-          {/* Technologies */}
-          {service.technologies && service.technologies.length > 0 && (
-            <div className="mb-6">
-              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
-                Technologies
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {service.technologies.slice(0, 3).map((tech: string, i: number) => (
-                  <span
-                    key={i}
-                    className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 text-xs font-medium rounded-lg"
-                  >
-                    {tech}
-                  </span>
-                ))}
-                {service.technologies.length > 3 && (
-                  <span className="px-3 py-1.5 bg-primary/10 text-primary text-xs font-medium rounded-lg">
-                    +{service.technologies.length - 3} more
-                  </span>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Features Preview */}
-          {service.features && service.features.length > 0 && (
-            <div className="mb-6">
-              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
-                Key Features
-              </p>
-              <ul className="space-y-2">
-                {service.features.slice(0, 2).map((feature: any, i: number) => (
-                  <li key={i} className="flex items-start gap-2 text-sm">
-                    <FaCheckCircle className="text-primary text-xs mt-1 flex-shrink-0" />
-                    <span className="text-gray-600 dark:text-gray-400">{feature.title}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Action Button */}
-          <Link
-            to={`/services/${service.slug}`}
-            className="inline-flex items-center justify-between group/link mt-auto pt-4 border-t border-gray-200 dark:border-gray-700"
-          >
-            <span className="text-primary font-semibold group-hover/link:text-purple-600 transition-colors">
-              Explore Service
+          {service.featured && (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-400/10 text-amber-600 dark:text-amber-400 text-xs font-semibold rounded-full border border-amber-400/20">
+              <FaStar className="text-[10px]" />
+              Featured
             </span>
-            <motion.div
-              whileHover={{ x: 5 }}
-              className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center group-hover/link:bg-primary transition-colors duration-300"
-            >
-              <FaArrowRight className="text-sm text-primary group-hover/link:text-white transition-colors" />
-            </motion.div>
-          </Link>
+          )}
         </div>
+
+        {/* Title */}
+        <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary transition-colors duration-200">
+          {service.title}
+        </h3>
+
+        {/* Tagline / Description */}
+        <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-6">
+          {service.tagline || service.description}
+        </p>
+
+        {/* Key Features Preview (if present) */}
+        {service.features && service.features.length > 0 && (
+          <div className="mb-6 pt-4 border-t border-gray-100 dark:border-white/[0.06]">
+            <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2.5">
+              Highlights
+            </p>
+            <ul className="space-y-2">
+              {service.features.slice(0, 2).map((feature: any, i: number) => (
+                <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                  <FaCheckCircle className="text-primary text-xs mt-0.5 flex-shrink-0" />
+                  <span className="line-clamp-1">{feature.title}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Technologies Pills */}
+        {service.technologies && service.technologies.length > 0 && (
+          <div className="mt-auto pt-4 mb-6">
+            <div className="flex flex-wrap gap-1.5">
+              {service.technologies.slice(0, 3).map((tech: string, i: number) => (
+                <span
+                  key={i}
+                  className="px-2.5 py-1 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 text-xs font-medium rounded-lg"
+                >
+                  {tech}
+                </span>
+              ))}
+              {service.technologies.length > 3 && (
+                <span className="px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded-lg">
+                  +{service.technologies.length - 3}
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Action Link Button */}
+        <Link
+          to={`/services/${service.slug}`}
+          className="inline-flex items-center justify-between w-full pt-4 border-t border-gray-100 dark:border-white/[0.06] group/link text-sm font-semibold text-primary dark:text-purple-400 hover:text-purple-600 transition-colors"
+        >
+          <span>Explore Details</span>
+          <div className="w-8 h-8 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center group-hover/link:bg-primary group-hover/link:text-white transition-all duration-200">
+            <FaArrowRight className="text-xs transition-transform duration-200 group-hover/link:translate-x-0.5" />
+          </div>
+        </Link>
       </div>
     </motion.div>
   );
@@ -290,94 +265,56 @@ const Services: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Hero Section */}
-      <section className="relative pt-24 md:pt-32 pb-16 md:pb-20 overflow-hidden">
-        {/* Animated Background */}
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl" />
+      <section className="relative pt-24 md:pt-32 pb-14 md:pb-16 overflow-hidden">
+        {/* Soft Background Orbs */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-16 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+          <div className="absolute top-28 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
         </div>
         
-        {/* Grid Pattern */}
-        <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03]">
+        {/* Subtle Grid Pattern */}
+        <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03] pointer-events-none">
           <div className="h-full w-full" style={{
             backgroundImage: `linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px),
               linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px)`,
-            backgroundSize: '60px 60px'
+            backgroundSize: '48px 48px'
           }} />
         </div>
         
-        <div className="container mx-auto px-6 max-w-7xl relative">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center max-w-4xl mx-auto"
-          >
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.1, type: "spring" }}
-            >
-              <span className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary/10 to-purple-600/10 text-primary rounded-full text-sm font-semibold mb-6 border border-primary/20">
-                <FaStar className="text-xs" />
-                MY SERVICES
-                <FaStar className="text-xs" />
-              </span>
-            </motion.div>
+        <div className="container mx-auto px-6 max-w-5xl relative">
+          <div className="text-center">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 text-primary dark:text-purple-300 rounded-full text-xs sm:text-sm font-semibold mb-6 border border-primary/20">
+              <FaStar className="text-[10px]" />
+              MY SERVICES
+            </span>
             
-            <motion.h1
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight"
-            >
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight leading-tight">
               Transforming Ideas into{' '}
-              <span className="relative">
-                <span className="bg-gradient-to-r from-primary via-purple-600 to-blue-500 bg-clip-text text-transparent">
-                  Powerful Solutions
-                </span>
-                <motion.span
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ delay: 0.8, duration: 0.8 }}
-                  className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-primary via-purple-600 to-blue-500 rounded-full origin-left"
-                />
+              <span className="bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                Powerful Solutions
               </span>
-            </motion.h1>
+            </h1>
             
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-8"
-            >
-              Comprehensive software engineering and AI solutions tailored to elevate your business
-            </motion.p>
+            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto leading-relaxed">
+              Comprehensive software engineering and AI solutions tailored to elevate your business with clean architecture and reliable execution.
+            </p>
             
-            {/* Hero Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="flex flex-wrap items-center justify-center gap-8 mt-8"
-            >
-              <div className="flex items-center gap-2">
-                <FaCheckCircle className="text-green-500" />
-                <span className="text-sm text-gray-600 dark:text-gray-400">100% Client Satisfaction</span>
+            {/* Hero Trust Badges */}
+            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 pt-2">
+              <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800/80 border border-gray-200/80 dark:border-white/10 shadow-sm text-xs sm:text-sm text-gray-700 dark:text-gray-300">
+                <FaCheckCircle className="text-emerald-500 text-xs" />
+                <span className="font-medium">100% Client Satisfaction</span>
               </div>
-              <div className="w-1 h-1 bg-gray-400 rounded-full" />
-              <div className="flex items-center gap-2">
-                <FaTrophy className="text-yellow-500" />
-                <span className="text-sm text-gray-600 dark:text-gray-400">2+ Years Experience</span>
+              <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800/80 border border-gray-200/80 dark:border-white/10 shadow-sm text-xs sm:text-sm text-gray-700 dark:text-gray-300">
+                <FaTrophy className="text-amber-500 text-xs" />
+                <span className="font-medium">2+ Years Experience</span>
               </div>
-              <div className="w-1 h-1 bg-gray-400 rounded-full" />
-              <div className="flex items-center gap-2">
-                <FaUsers className="text-blue-500" />
-                <span className="text-sm text-gray-600 dark:text-gray-400">05+ Happy Clients</span>
+              <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800/80 border border-gray-200/80 dark:border-white/10 shadow-sm text-xs sm:text-sm text-gray-700 dark:text-gray-300">
+                <FaUsers className="text-primary text-xs" />
+                <span className="font-medium">05+ Happy Clients</span>
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </section>
 
